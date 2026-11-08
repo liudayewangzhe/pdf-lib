@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++命名空间详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 50%, #f8bbd0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(45deg, #42a5f5, #7e57c2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 5px solid #ff9800;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        section {
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #42a5f5;
+        }
+        
+        h2 {
+            color: #7e57c2;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #bbdefb;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #42a5f5;
+            margin: 20px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: #7e57c2;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1f5fe;
+        }
+        
+        tr:nth-child(even) {
+            background: #f3e5f5;
+        }
+        
+        tr:hover {
+            background: #e1f5fe;
+        }
+        
+        pre {
+            background: #f5f5f5;
+            border-left: 4px solid #42a5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        code {
+            background: #fff3e0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        footer {
+            background: linear-gradient(45deg, #7e57c2, #42a5f5);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1.2rem;
+            margin-top: 40px;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .example-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .example-title {
+            color: #7e57c2;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++命名空间详解</h1>
+            <p class="subtitle">命名空间定义、using声明、命名空间嵌套</p>
+        </header>
+        
+        <div class="content">
+            <section>
+                <h2>什么是命名空间？</h2>
+                <p>命名空间是C++中用于组织代码的一种机制，它可以避免命名冲突，将全局作用域划分为不同的区域。在大型项目中，命名空间尤为重要，可以防止不同模块中的同名标识符相互干扰。</p>
+                
+                <div class="svg-container">
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="50" width="150" height="100" fill="#bbdefb" stroke="#42a5f5" stroke-width="2" rx="10"/>
+                        <text x="125" y="110" text-anchor="middle" fill="#1565c0" font-size="16" font-weight="bold">命名空间A</text>
+                        
+                        <rect x="250" y="50" width="150" height="100" fill="#c8e6c9" stroke="#4caf50" stroke-width="2" rx="10"/>
+                        <text x="325" y="110" text-anchor="middle" fill="#2e7d32" font-size="16" font-weight="bold">命名空间B</text>
+                        
+                        <rect x="450" y="50" width="150" height="100" fill="#ffecb3" stroke="#ffc107" stroke-width="2" rx="10"/>
+                        <text x="525" y="110" text-anchor="middle" fill="#ff8f00" font-size="16" font-weight="bold">命名空间C</text>
+                        
+                        <text x="300" y="30" text-anchor="middle" fill="#7e57c2" font-size="18" font-weight="bold">全局作用域</text>
+                    </svg>
+                </div>
+                
+                <div class="tip-box">
+                    <p><strong>提示：</strong> 命名空间类似于文件系统中的文件夹，可以将相关的代码组织在一起，避免名称冲突。</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2>命名空间的定义</h2>
+                <p>使用<code>namespace</code>关键字可以定义命名空间。命名空间可以包含变量、函数、类、模板等。</p>
+                
+                <h3>基本语法</h3>
+                <pre><code>namespace 命名空间名称 {
+    // 声明和定义
+    // 变量、函数、类等
+}</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code>#include &lt;iostream&gt;
+
+// 定义命名空间Math
+namespace Math {
+    const double PI = 3.14159;
+    
+    double square(double x) {
+        return x * x;
+    }
+    
+    double cube(double x) {
+        return x * x * x;
+    }
+}
+
+// 定义命名空间StringUtil
+namespace StringUtil {
+    std::string toUpperCase(const std::string& str) {
+        std::string result = str;
+        for (char& c : result) {
+            c = std::toupper(c);
+        }
+        return result;
+    }
+    
+    std::string toLowerCase(const std::string& str) {
+        std::string result = str;
+        for (char& c : result) {
+            c = std::tolower(c);
+        }
+        return result;
+    }
+}
+
+int main() {
+    // 使用命名空间中的内容
+    std::cout << "PI的值: " << Math::PI << std::endl;
+    std::cout << "5的平方: " << Math::square(5) << std::endl;
+    std::cout << "3的立方: " << Math::cube(3) << std::endl;
+    
+    std::string text = "Hello World";
+    std::cout << "大写: " << StringUtil::toUpperCase(text) << std::endl;
+    std::cout << "小写: " << StringUtil::toLowerCase(text) << std::endl;
+    
+    return 0;
+}</code></pre>
+            </section>
+            
+            <section>
+                <h2>using声明</h2>
+                <p>使用<code>using</code>声明可以引入命名空间中的特定名称到当前作用域，或者使用<code>using namespace</code>引入整个命名空间。</p>
+                
+                <div class="example-grid">
+                    <div class="example-card">
+                        <div class="example-title">using声明（引入特定名称）</div>
+                        <pre><code>#include &lt;iostream&gt;
+
+namespace Math {
+    double PI = 3.14159;
+    double square(double x) { return x*x; }
+}
+
+int main() {
+    using Math::PI;      // 引入PI
+    using Math::square;  // 引入square函数
+    
+    std::cout << PI << std::endl;        // 直接使用
+    std::cout << square(5) << std::endl; // 直接使用
+    
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="example-card">
+                        <div class="example-title">using指令（引入整个命名空间）</div>
+                        <pre><code>#include &lt;iostream&gt;
+
+namespace Math {
+    double PI = 3.14159;
+    double square(double x) { return x*x; }
+}
+
+int main() {
+    using namespace Math;  // 引入整个Math命名空间
+    
+    std::cout << PI << std::endl;        // 直接使用
+    std::cout << square(5) << std::endl; // 直接使用
+    
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <p><strong>注意：</strong> 在头文件中应避免使用<code>using namespace</code>，因为它会污染包含该头文件的源文件的命名空间，可能导致命名冲突。</p>
+                </div>
+                
+                <h3>using声明的作用域</h3>
+                <table>
+                    <tr>
+                        <th>声明位置</th>
+                        <th>作用域</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>全局作用域</td>
+                        <td>从声明点到文件结束</td>
+                        <td><code>using std::cout;</code></td>
+                    </tr>
+                    <tr>
+                        <td>函数内部</td>
+                        <td>函数作用域</td>
+                        <td><code>void func() { using std::cin; }</code></td>
+                    </tr>
+                    <tr>
+                        <td>命名空间内部</td>
+                        <td>命名空间作用域</td>
+                        <td><code>namespace A { using std::string; }</code></td>
+                    </tr>
+                </table>
+            </section>
+            
+            <section>
+                <h2>命名空间嵌套</h2>
+                <p>命名空间可以嵌套定义，形成层次结构，这有助于更好地组织代码。</p>
+                
+                <h3>嵌套命名空间的定义</h3>
+                <pre><code>// 传统方式
+namespace Outer {
+    namespace Inner {
+        void func() {
+            std::cout << "嵌套命名空间中的函数" << std::endl;
+        }
+    }
+}
+
+// C++17新语法（更简洁）
+namespace Outer::Inner {
+    void newFunc() {
+        std::cout << "使用新语法的嵌套命名空间" << std::endl;
+    }
+}</code></pre>
+                
+                <h3>嵌套命名空间的使用</h3>
+                <pre><code>#include &lt;iostream&gt;
+
+// 定义嵌套命名空间
+namespace Company {
+    namespace Department {
+        namespace Team {
+            void work() {
+                std::cout << "团队正在工作..." << std::endl;
+            }
+            
+            class Employee {
+            public:
+                std::string name;
+                int id;
+                
+                void display() {
+                    std::cout << "员工 " << name << " (ID: " << id << ")" << std::endl;
+                }
+            };
+        }
+    }
+}
+
+int main() {
+    // 使用嵌套命名空间
+    Company::Department::Team::work();
+    
+    Company::Department::Team::Employee emp;
+    emp.name = "张三";
+    emp.id = 1001;
+    emp.display();
+    
+    // 使用using简化
+    using Company::Department::Team::Employee;
+    Employee emp2;
+    emp2.name = "李四";
+    emp2.id = 1002;
+    emp2.display();
+    
+    return 0;
+}</code></pre>
+                
+                <div class="svg-container">
+                    <svg width="500" height="300" viewBox="0 0 500 300">
+                        <rect x="50" y="50" width="400" height="200" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2" rx="10"/>
+                        <text x="250" y="80" text-anchor="middle" fill="#1565c0" font-size="18" font-weight="bold">Company命名空间</text>
+                        
+                        <rect x="100" y="100" width="300" height="130" fill="#f3e5f5" stroke="#7e57c2" stroke-width="2" rx="10"/>
+                        <text x="250" y="130" text-anchor="middle" fill="#7b1fa2" font-size="16" font-weight="bold">Department命名空间</text>
+                        
+                        <rect x="150" y="150" width="200" height="60" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="10"/>
+                        <text x="250" y="180" text-anchor="middle" fill="#2e7d32" font-size="14" font-weight="bold">Team命名空间</text>
+                        
+                        <text x="250" y="220" text-anchor="middle" fill="#ff6f00" font-size="12">Employee类 work()函数</text>
+                        
+                        <line x1="250" y1="50" x2="250" y2="100" stroke="#42a5f5" stroke-width="2"/>
+                        <line x1="250" y1="130" x2="250" y2="150" stroke="#7e57c2" stroke-width="2"/>
+                    </svg>
+                </div>
+            </section>
+            
+            <section>
+                <h2>匿名命名空间</h2>
+                <p>匿名命名空间是没有名称的命名空间，其中的内容具有内部链接属性，只能在当前文件中访问。</p>
+                
+                <pre><code>#include &lt;iostream&gt;
+
+// 匿名命名空间
+namespace {
+    int internalVar = 42;  // 只能在当前文件中访问
+    
+    void internalFunction() {
+        std::cout << "这是匿名命名空间中的函数" << std::endl;
+    }
+}
+
+int main() {
+    std::cout << "内部变量: " << internalVar << std::endl;
+    internalFunction();
+    
+    return 0;
+}</code></pre>
+                
+                <div class="tip-box">
+                    <p><strong>提示：</strong> 匿名命名空间类似于使用<code>static</code>关键字，但更现代，是C++中推荐的方式来实现文件作用域。</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2>命名空间别名</h2>
+                <p>当命名空间名称很长时，可以为其创建别名，简化代码。</p>
+                
+                <pre><code>#include &lt;iostream&gt;
+
+namespace VeryLongNamespaceName {
+    void function() {
+        std::cout << "长命名空间中的函数" << std::endl;
+    }
+}
+
+// 创建命名空间别名
+namespace VLN = VeryLongNamespaceName;
+
+int main() {
+    // 使用别名
+    VLN::function();
+    
+    // 也可以使用原始名称
+    VeryLongNamespaceName::function();
+    
+    return 0;
+}</code></pre>
+            </section>
+            
+            <section>
+                <h2>最佳实践总结</h2>
+                <table>
+                    <tr>
+                        <th>场景</th>
+                        <th>推荐做法</th>
+                        <th>不推荐做法</th>
+                    </tr>
+                    <tr>
+                        <td>头文件</td>
+                        <td>使用完全限定名称或using声明</td>
+                        <td>使用using namespace</td>
+                    </tr>
+                    <tr>
+                        <td>实现文件</td>
+                        <td>在函数内部使用using声明</td>
+                        <td>在文件开头使用using namespace</td>
+                    </tr>
+                    <tr>
+                        <td>大型项目</td>
+                        <td>使用有意义的嵌套命名空间</td>
+                        <td>将所有内容放在全局命名空间</td>
+                    </tr>
+                    <tr>
+                        <td>避免冲突</td>
+                        <td>使用命名空间包装自己的代码</td>
+                        <td>依赖唯一的名称</td>
+                    </tr>
+                </table>
+                
+                <div class="tip-box">
+                    <p><strong>记住：</strong> 良好的命名空间使用习惯可以使代码更清晰、更易于维护，并有效避免命名冲突。</p>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>蓝海资料掘金营 © 2023 - C++从入门到精通课程</p>
+        </footer>
+    </div>
+</body>
+</html>

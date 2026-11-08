@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++构造函数与析构函数详解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #4fc3f7;
+        }
+        
+        h2 {
+            color: #0288d1;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e3f2fd;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #0277bd;
+            margin: 20px 0 15px 0;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #f5f5f5, #e0e0e0);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h4 {
+            color: #01579b;
+            margin-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #4fc3f7;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8fdff;
+        }
+        
+        pre {
+            background: #f5f5f5;
+            border-left: 4px solid #4fc3f7;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+        }
+        
+        code {
+            background: #e3f2fd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .svg-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(45deg, #e1f5fe, #f3e5f5);
+            border: 2px solid #4fc3f7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            background: linear-gradient(45deg, #0288d1, #01579b);
+            color: white;
+            border-radius: 15px;
+            font-size: 1.1em;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .example-box {
+            background: #fff8e1;
+            border-left: 4px solid #ffd54f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++构造函数与析构函数</h1>
+            <div class="subtitle">默认构造、拷贝构造、析构函数调用时机详解</div>
+        </header>
+
+        <section class="content-section">
+            <h2>📚 构造函数与析构函数概述</h2>
+            <p>构造函数和析构函数是C++面向对象编程中的重要概念，它们负责对象的初始化和清理工作。</p>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🏗️ 构造函数</h4>
+                    <p>在创建对象时自动调用，用于初始化对象的数据成员。</p>
+                    <ul>
+                        <li>与类同名</li>
+                        <li>无返回值类型</li>
+                        <li>可以重载</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>🧹 析构函数</h4>
+                    <p>在对象销毁时自动调用，用于释放对象占用的资源。</p>
+                    <ul>
+                        <li>类名前加~</li>
+                        <li>无参数</li>
+                        <li>不能重载</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>🔧 默认构造函数</h2>
+            <p>默认构造函数是不带任何参数的构造函数，或者所有参数都有默认值的构造函数。</p>
+            
+            <h3>📝 定义方式</h3>
+            <pre><code>class MyClass {
+public:
+    // 默认构造函数
+    MyClass() {
+        // 初始化代码
+    }
+};</code></pre>
+            
+            <h3>🎯 调用时机</h3>
+            <table>
+                <tr>
+                    <th>场景</th>
+                    <th>示例代码</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>对象声明</td>
+                    <td><code>MyClass obj;</code></td>
+                    <td>创建栈对象</td>
+                </tr>
+                <tr>
+                    <td>动态分配</td>
+                    <td><code>MyClass *ptr = new MyClass();</code></td>
+                    <td>创建堆对象</td>
+                </tr>
+                <tr>
+                    <td>数组创建</td>
+                    <td><code>MyClass arr[5];</code></td>
+                    <td>创建对象数组</td>
+                </tr>
+            </table>
+            
+            <div class="example-box">
+                <h4>💡 示例代码</h4>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+class Student {
+private:
+    string name;
+    int age;
+public:
+    // 默认构造函数
+    Student() {
+        name = "未知";
+        age = 0;
+        cout << "默认构造函数被调用" << endl;
+    }
+    
+    void display() {
+        cout << "姓名: " << name << ", 年龄: " << age << endl;
+    }
+};
+
+int main() {
+    Student s1;          // 调用默认构造函数
+    Student *s2 = new Student(); // 调用默认构造函数
+    s1.display();
+    s2->display();
+    delete s2;
+    return 0;
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>📋 拷贝构造函数</h2>
+            <p>拷贝构造函数用于用一个已存在的对象来初始化一个新对象。</p>
+            
+            <h3>📝 定义方式</h3>
+            <pre><code>class MyClass {
+public:
+    // 拷贝构造函数
+    MyClass(const MyClass &obj) {
+        // 拷贝逻辑
+    }
+};</code></pre>
+            
+            <h3>🎯 调用时机</h3>
+            <table>
+                <tr>
+                    <th>场景</th>
+                    <th>示例代码</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>对象初始化</td>
+                    <td><code>MyClass obj2 = obj1;</code></td>
+                    <td>用已有对象初始化新对象</td>
+                </tr>
+                <tr>
+                    <td>函数参数传递</td>
+                    <td><code>func(MyClass obj)</code></td>
+                    <td>值传递对象参数</td>
+                </tr>
+                <tr>
+                    <td>函数返回值</td>
+                    <td><code>return obj;</code></td>
+                    <td>返回对象值</td>
+                </tr>
+            </table>
+            
+            <div class="example-box">
+                <h4>💡 示例代码</h4>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+private:
+    int x, y;
+public:
+    Point(int xVal = 0, int yVal = 0) : x(xVal), y(yVal) {
+        cout << "构造函数被调用" << endl;
+    }
+    
+    // 拷贝构造函数
+    Point(const Point &p) {
+        x = p.x;
+        y = p.y;
+        cout << "拷贝构造函数被调用" << endl;
+    }
+    
+    void display() {
+        cout << "坐标: (" << x << ", " << y << ")" << endl;
+    }
+};
+
+void showPoint(Point p) {  // 拷贝构造函数被调用
+    p.display();
+}
+
+Point createPoint() {      // 返回时拷贝构造函数被调用
+    Point temp(10, 20);
+    return temp;
+}
+
+int main() {
+    Point p1(5, 5);
+    Point p2 = p1;        // 拷贝构造函数被调用
+    showPoint(p1);        // 拷贝构造函数被调用
+    Point p3 = createPoint(); // 拷贝构造函数被调用
+    return 0;
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>⏰ 析构函数调用时机</h2>
+            <p>析构函数在对象生命周期结束时自动调用，用于清理资源。</p>
+            
+            <h3>📝 定义方式</h3>
+            <pre><code>class MyClass {
+public:
+    // 析构函数
+    ~MyClass() {
+        // 清理代码
+    }
+};</code></pre>
+            
+            <h3>🎯 调用时机</h3>
+            <table>
+                <tr>
+                    <th>场景</th>
+                    <th>触发条件</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>栈对象</td>
+                    <td>离开作用域</td>
+                    <td>函数结束、代码块结束</td>
+                </tr>
+                <tr>
+                    <td>堆对象</td>
+                    <td>delete操作</td>
+                    <td>显式释放内存</td>
+                </tr>
+                <tr>
+                    <td>静态对象</td>
+                    <td>程序结束</td>
+                    <td>main函数结束</td>
+                </tr>
+                <tr>
+                    <td>临时对象</td>
+                    <td>表达式结束</td>
+                    <td>生命周期结束</td>
+                </tr>
+            </table>
+            
+            <div class="example-box">
+                <h4>💡 示例代码</h4>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+class Resource {
+private:
+    string name;
+public:
+    Resource(string n) : name(n) {
+        cout << "构造函数: " << name << endl;
+    }
+    
+    ~Resource() {
+        cout << "析构函数: " << name << endl;
+    }
+};
+
+void testFunction() {
+    Resource r1("局部对象");
+    static Resource r2("静态对象");
+    Resource *r3 = new Resource("堆对象");
+    delete r3;  // 手动调用析构函数
+}  // r1的析构函数被调用
+
+int main() {
+    cout << "进入main函数" << endl;
+    testFunction();
+    cout << "离开main函数" << endl;
+    return 0;
+}  // 静态对象r2的析构函数被调用</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>📊 构造函数与析构函数调用顺序</h2>
+            
+            <div class="svg-container">
+                <svg width="800" height="400" viewBox="0 0 800 400">
+                    <!-- 背景 -->
+                    <rect width="800" height="400" fill="#e3f2fd" rx="10"/>
+                    
+                    <!-- 标题 -->
+                    <text x="400" y="40" text-anchor="middle" font-size="20" font-weight="bold" fill="#01579b">
+                        对象生命周期中的构造函数与析构函数调用
+                    </text>
+                    
+                    <!-- 时间线 -->
+                    <line x1="100" y1="100" x2="700" y2="100" stroke="#0288d1" stroke-width="3"/>
+                    <line x1="100" y1="300" x2="700" y2="300" stroke="#0288d1" stroke-width="3"/>
+                    
+                    <!-- 构造函数调用点 -->
+                    <circle cx="150" cy="100" r="8" fill="#4caf50"/>
+                    <text x="150" y="90" text-anchor="middle" font-size="14" fill="#2e7d32">对象创建</text>
+                    <text x="150" y="120" text-anchor="middle" font-size="12" fill="#388e3c">构造函数调用</text>
+                    
+                    <!-- 对象使用期 -->
+                    <rect x="200" y="80" width="300" height="40" fill="#bbdefb" stroke="#1976d2" stroke-width="2" rx="5"/>
+                    <text x="350" y="105" text-anchor="middle" font-size="16" fill="#0d47a1">对象使用期</text>
+                    
+                    <!-- 析构函数调用点 -->
+                    <circle cx="650" cy="300" r="8" fill="#f44336"/>
+                    <text x="650" y="290" text-anchor="middle" font-size="14" fill="#c62828">对象销毁</text>
+                    <text x="650" y="320" text-anchor="middle" font-size="12" fill="#d32f2f">析构函数调用</text>
+                    
+                    <!-- 箭头 -->
+                    <path d="M 150 110 L 150 290" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                    <path d="M 500 120 L 500 280" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                    
+                    <!-- 说明 -->
+                    <text x="150" y="270" text-anchor="middle" font-size="12" fill="#e65100">对象创建时</text>
+                    <text x="150" y="285" text-anchor="middle" font-size="12" fill="#e65100">构造函数被调用</text>
+                    
+                    <text x="500" y="250" text-anchor="middle" font-size="12" fill="#e65100">对象销毁时</text>
+                    <text x="500" y="265" text-anchor="middle" font-size="12" fill="#e65100">析构函数被调用</text>
+                    
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ff9800"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+            
+            <div class="highlight-box">
+                <h4>📝 重要规则</h4>
+                <ul>
+                    <li><strong>构造顺序：</strong>基类 → 成员对象 → 派生类</li>
+                    <li><strong>析构顺序：</strong>派生类 → 成员对象 → 基类（与构造相反）</li>
+                    <li><strong>栈对象：</strong>后构造的先析构（LIFO原则）</li>
+                    <li><strong>静态对象：</strong>在程序结束时析构</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>🎓 综合实例演示</h2>
+            
+            <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Person {
+private:
+    string name;
+    int age;
+public:
+    // 默认构造函数
+    Person() : name("无名"), age(0) {
+        cout << "Person默认构造函数: " << name << endl;
+    }
+    
+    // 带参数构造函数
+    Person(string n, int a) : name(n), age(a) {
+        cout << "Person带参构造函数: " << name << endl;
+    }
+    
+    // 拷贝构造函数
+    Person(const Person &p) : name(p.name + "(副本)"), age(p.age) {
+        cout << "Person拷贝构造函数: " << name << endl;
+    }
+    
+    // 析构函数
+    ~Person() {
+        cout << "Person析构函数: " << name << endl;
+    }
+    
+    void display() {
+        cout << "姓名: " << name << ", 年龄: " << age << endl;
+    }
+};
+
+void testPerson() {
+    cout << "=== 进入testPerson函数 ===" << endl;
+    
+    Person p1;                          // 默认构造函数
+    Person p2("张三", 20);              // 带参构造函数
+    Person p3 = p2;                     // 拷贝构造函数
+    
+    p1.display();
+    p2.display();
+    p3.display();
+    
+    cout << "=== 离开testPerson函数 ===" << endl;
+} // p3, p2, p1的析构函数依次被调用
+
+int main() {
+    cout << "=== 程序开始 ===" << endl;
+    
+    testPerson();
+    
+    Person *p4 = new Person("李四", 25); // 堆对象
+    p4->display();
+    delete p4;                          // 手动调用析构函数
+    
+    cout << "=== 程序结束 ===" << endl;
+    return 0;
+}</code></pre>
+            
+            <div class="highlight-box">
+                <h4>🔍 运行结果分析</h4>
+                <pre>
+=== 程序开始 ===
+=== 进入testPerson函数 ===
+Person默认构造函数: 无名
+Person带参构造函数: 张三
+Person拷贝构造函数: 张三(副本)
+姓名: 无名, 年龄: 0
+姓名: 张三, 年龄: 20
+姓名: 张三(副本), 年龄: 20
+=== 离开testPerson函数 ===
+Person析构函数: 张三(副本)
+Person析构函数: 张三
+Person析构函数: 无名
+Person带参构造函数: 李四
+姓名: 李四, 年龄: 25
+Person析构函数: 李四
+=== 程序结束 ===
+                </pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>💡 最佳实践与注意事项</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>✅ 构造函数最佳实践</h4>
+                    <ul>
+                        <li>使用初始化列表初始化成员变量</li>
+                        <li>为类提供合适的默认构造函数</li>
+                        <li>考虑使用explicit防止隐式转换</li>
+                        <li>在构造函数中避免调用虚函数</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>✅ 析构函数最佳实践</h4>
+                    <ul>
+                        <li>为有动态内存分配的类定义析构函数</li>
+                        <li>将析构函数声明为virtual（基类）</li>
+                        <li>在析构函数中不要抛出异常</li>
+                        <li>遵循RAII原则</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>⚠️ 常见错误</h4>
+                    <ul>
+                        <li>忘记释放动态分配的内存</li>
+                        <li>浅拷贝导致的问题</li>
+                        <li>构造函数中资源泄漏</li>
+                        <li>对象切片问题</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h4>🎯 关键要点总结</h4>
+                <ol>
+                    <li><strong>构造函数</strong>在对象创建时自动调用，用于初始化</li>
+                    <li><strong>拷贝构造函数</strong>在用已有对象创建新对象时调用</li>
+                    <li><strong>析构函数</strong>在对象销毁时自动调用，用于清理</li>
+                    <li>构造和析构的顺序遵循特定规则</li>
+                    <li>合理使用三法则（Rule of Three）</li>
+                </ol>
+            </div>
+        </section>
+
+        <footer>
+            <p>蓝海资料掘金营 © 2024 - C++从入门到精通系列课程</p>
+            <p>构造函数与析构函数：掌握对象生命周期管理</p>
+        </footer>
+    </div>
+</body>
+</html>

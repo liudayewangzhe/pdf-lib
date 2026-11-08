@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++异常处理 - 从入门到精通</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #fff3e0 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(45deg, #4fc3f7, #ffd54f);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1565c0;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #0277bd;
+            font-size: 1.4em;
+            font-weight: 300;
+        }
+        
+        .chapter {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border-left: 6px solid #4fc3f7;
+        }
+        
+        h2 {
+            color: #0288d1;
+            border-bottom: 3px solid #ffd54f;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #039be5;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .highlight {
+            background: linear-gradient(45deg, #fff9c4, #e1f5fe);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8fdff;
+        }
+        
+        tr:hover {
+            background: #e1f5fe;
+        }
+        
+        .svg-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .architecture {
+            background: linear-gradient(45deg, #e3f2fd, #f3e5f5);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            background: linear-gradient(45deg, #1565c0, #1976d2);
+            color: white;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .note {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++异常处理</h1>
+            <div class="subtitle">try-catch块、异常类、自定义异常</div>
+        </header>
+
+        <div class="chapter">
+            <h2>什么是异常处理？</h2>
+            <p>异常处理是C++中处理程序运行时错误的一种机制。当程序遇到无法正常处理的情况时（如除零、内存分配失败、文件不存在等），可以通过抛出异常来中断正常的程序流程，并由专门的异常处理代码来接管。</p>
+            
+            <div class="highlight">
+                <p><strong>为什么要使用异常处理？</strong></p>
+                <ul>
+                    <li>将错误处理代码与正常业务逻辑分离</li>
+                    <li>提供统一的错误处理机制</li>
+                    <li>支持错误信息的传递</li>
+                    <li>提高代码的可读性和可维护性</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>try-catch块的基本语法</h2>
+            
+            <h3>基本结构</h3>
+            <div class="code-block">
+<pre>
+try {
+    // 可能抛出异常的代码
+    // 如果发生异常，立即跳转到catch块
+}
+catch (异常类型1 参数1) {
+    // 处理类型1的异常
+}
+catch (异常类型2 参数2) {
+    // 处理类型2的异常
+}
+catch (...) {
+    // 处理所有其他类型的异常
+}
+</pre>
+            </div>
+
+            <h3>示例代码</h3>
+            <div class="code-block">
+<pre>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+
+int divide(int a, int b) {
+    if (b == 0) {
+        throw std::runtime_error("除数不能为零！");
+    }
+    return a / b;
+}
+
+int main() {
+    try {
+        int result = divide(10, 0);
+        std::cout << "结果是: " << result << std::endl;
+    }
+    catch (const std::runtime_error& e) {
+        std::cout << "捕获到异常: " << e.what() << std::endl;
+    }
+    catch (...) {
+        std::cout << "捕获到未知异常" << std::endl;
+    }
+    
+    return 0;
+}
+</pre>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>标准异常类</h2>
+            <p>C++标准库提供了一系列异常类，它们都继承自<code>std::exception</code>基类。</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>异常类</th>
+                        <th>头文件</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>std::exception</code></td>
+                        <td><code>&lt;exception&gt;</code></td>
+                        <td>所有标准异常类的基类</td>
+                    </tr>
+                    <tr>
+                        <td><code>std::runtime_error</code></td>
+                        <td><code>&lt;stdexcept&gt;</code></td>
+                        <td>运行时错误</td>
+                    </tr>
+                    <tr>
+                        <td><code>std::logic_error</code></td>
+                        <td><code>&lt;stdexcept&gt;</code></td>
+                        <td>逻辑错误</td>
+                    </tr>
+                    <tr>
+                        <td><code>std::bad_alloc</code></td>
+                        <td><code>&lt;new&gt;</code></td>
+                        <td>内存分配失败</td>
+                    </tr>
+                    <tr>
+                        <td><code>std::out_of_range</code></td>
+                        <td><code>&lt;stdexcept&gt;</code></td>
+                        <td>下标越界</td>
+                    </tr>
+                    <tr>
+                        <td><code>std::invalid_argument</code></td>
+                        <td><code>&lt;stdexcept&gt;</code></td>
+                        <td>无效参数</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="svg-container">
+                <svg width="600" height="200" viewBox="0 0 600 200">
+                    <rect x="50" y="20" width="200" height="40" fill="#4fc3f7" stroke="#0288d1" stroke-width="2" rx="5"/>
+                    <text x="150" y="45" text-anchor="middle" fill="white" font-weight="bold">std::exception</text>
+                    
+                    <line x1="150" y1="60" x2="100" y2="100" stroke="#0288d1" stroke-width="2"/>
+                    <line x1="150" y1="60" x2="200" y2="100" stroke="#0288d1" stroke-width="2"/>
+                    
+                    <rect x="20" y="100" width="160" height="40" fill="#29b6f6" stroke="#0277bd" stroke-width="2" rx="5"/>
+                    <text x="100" y="125" text-anchor="middle" fill="white">std::logic_error</text>
+                    
+                    <rect x="220" y="100" width="160" height="40" fill="#29b6f6" stroke="#0277bd" stroke-width="2" rx="5"/>
+                    <text x="300" y="125" text-anchor="middle" fill="white">std::runtime_error</text>
+                    
+                    <line x1="100" y1="140" x2="50" y2="180" stroke="#0288d1" stroke-width="2"/>
+                    <line x1="100" y1="140" x2="150" y2="180" stroke="#0288d1" stroke-width="2"/>
+                    
+                    <line x1="300" y1="140" x2="250" y2="180" stroke="#0288d1" stroke-width="2"/>
+                    <line x1="300" y1="140" x2="350" y2="180" stroke="#0288d1" stroke-width="2"/>
+                    
+                    <rect x="0" y="180" width="100" height="40" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                    <text x="50" y="205" text-anchor="middle" fill="white" font-size="12">out_of_range</text>
+                    
+                    <rect x="110" y="180" width="100" height="40" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                    <text x="160" y="205" text-anchor="middle" fill="white" font-size="12">invalid_argument</text>
+                    
+                    <rect x="220" y="180" width="100" height="40" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                    <text x="270" y="205" text-anchor="middle" fill="white" font-size="12">overflow_error</text>
+                    
+                    <rect x="330" y="180" width="100" height="40" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                    <text x="380" y="205" text-anchor="middle" fill="white" font-size="12">underflow_error</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>自定义异常类</h2>
+            <p>我们可以创建自己的异常类来满足特定的需求，通常需要继承自标准异常类。</p>
+            
+            <h3>创建自定义异常类</h3>
+            <div class="code-block">
+<pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;exception&gt;
+
+class MyException : public std::exception {
+private:
+    std::string message;
+    
+public:
+    // 构造函数
+    MyException(const std::string& msg) : message(msg) {}
+    
+    // 重写what()方法
+    virtual const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
+class FileNotFoundException : public std::runtime_error {
+public:
+    FileNotFoundException(const std::string& filename)
+        : std::runtime_error("文件未找到: " + filename) {}
+};
+
+// 使用示例
+void openFile(const std::string& filename) {
+    // 模拟文件不存在的情况
+    throw FileNotFoundException(filename);
+}
+
+int main() {
+    try {
+        openFile("data.txt");
+    }
+    catch (const FileNotFoundException& e) {
+        std::cout << "文件操作错误: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cout << "标准异常: " << e.what() << std::endl;
+    }
+    
+    return 0;
+}
+</pre>
+            </div>
+
+            <div class="note">
+                <p><strong>最佳实践：</strong></p>
+                <ul>
+                    <li>自定义异常类应该继承自<code>std::exception</code>或其派生类</li>
+                    <li>重写<code>what()</code>方法提供错误描述</li>
+                    <li>使用有意义的异常类名</li>
+                    <li>在异常消息中包含有用的调试信息</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>异常处理流程架构</h2>
+            
+            <div class="architecture">
+                <svg width="600" height="400" viewBox="0 0 600 400">
+                    <!-- 开始 -->
+                    <rect x="250" y="20" width="100" height="40" fill="#4caf50" stroke="#2e7d32" stroke-width="2" rx="5"/>
+                    <text x="300" y="45" text-anchor="middle" fill="white" font-weight="bold">开始</text>
+                    
+                    <!-- 正常执行 -->
+                    <rect x="250" y="80" width="100" height="40" fill="#2196f3" stroke="#1565c0" stroke-width="2" rx="5"/>
+                    <text x="300" y="105" text-anchor="middle" fill="white">正常执行</text>
+                    
+                    <!-- 箭头 -->
+                    <line x1="300" y1="60" x2="300" y2="80" stroke="#1565c0" stroke-width="2"/>
+                    <polygon points="300,80 295,70 305,70" fill="#1565c0"/>
+                    
+                    <!-- 异常发生点 -->
+                    <circle cx="300" cy="150" r="25" fill="#ff9800" stroke="#f57c00" stroke-width="2"/>
+                    <text x="300" y="155" text-anchor="middle" fill="white" font-weight="bold">异常</text>
+                    
+                    <!-- 箭头 -->
+                    <line x1="300" y1="120" x2="300" y2="125" stroke="#1565c0" stroke-width="2"/>
+                    <polygon points="300,125 295,115 305,115" fill="#1565c0"/>
+                    
+                    <!-- 查找catch块 -->
+                    <rect x="200" y="200" width="200" height="40" fill="#ff5722" stroke="#d84315" stroke-width="2" rx="5"/>
+                    <text x="300" y="225" text-anchor="middle" fill="white">查找匹配的catch块</text>
+                    
+                    <!-- 箭头 -->
+                    <line x1="300" y1="175" x2="300" y2="200" stroke="#ff9800" stroke-width="2"/>
+                    <polygon points="300,200 295,190 305,190" fill="#ff9800"/>
+                    
+                    <!-- 找到匹配 -->
+                    <rect x="150" y="260" width="150" height="40" fill="#8bc34a" stroke="#558b2f" stroke-width="2" rx="5"/>
+                    <text x="225" y="285" text-anchor="middle" fill="white">找到匹配</text>
+                    
+                    <!-- 未找到匹配 -->
+                    <rect x="300" y="260" width="150" height="40" fill="#f44336" stroke="#c62828" stroke-width="2" rx="5"/>
+                    <text x="375" y="285" text-anchor="middle" fill="white">未找到匹配</text>
+                    
+                    <!-- 箭头 -->
+                    <line x1="225" y1="240" x2="225" y2="260" stroke="#ff5722" stroke-width="2"/>
+                    <polygon points="225,260 220,250 230,250" fill="#ff5722"/>
+                    
+                    <line x1="375" y1="240" x2="375" y2="260" stroke="#ff5722" stroke-width="2"/>
+                    <polygon points="375,260 370,250 380,250" fill="#ff5722"/>
+                    
+                    <!-- 处理异常 -->
+                    <rect x="150" y="320" width="150" height="40" fill="#009688" stroke="#00695c" stroke-width="2" rx="5"/>
+                    <text x="225" y="345" text-anchor="middle" fill="white">执行catch块</text>
+                    
+                    <!-- 程序终止 -->
+                    <rect x="300" y="320" width="150" height="40" fill="#795548" stroke="#4e342e" stroke-width="2" rx="5"/>
+                    <text x="375" y="345" text-anchor="middle" fill="white">程序终止</text>
+                    
+                    <!-- 箭头 -->
+                    <line x1="225" y1="300" x2="225" y2="320" stroke="#8bc34a" stroke-width="2"/>
+                    <polygon points="225,320 220,310 230,310" fill="#8bc34a"/>
+                    
+                    <line x1="375" y1="300" x2="375" y2="320" stroke="#f44336" stroke-width="2"/>
+                    <polygon points="375,320 370,310 380,310" fill="#f44336"/>
+                    
+                    <!-- 继续执行 -->
+                    <rect x="150" y="380" width="150" height="40" fill="#673ab7" stroke="#4527a0" stroke-width="2" rx="5"/>
+                    <text x="225" y="405" text-anchor="middle" fill="white">继续执行</text>
+                    
+                    <!-- 箭头 -->
+                    <line x1="225" y1="360" x2="225" y2="380" stroke="#009688" stroke-width="2"/>
+                    <polygon points="225,380 220,370 230,370" fill="#009688"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>异常处理的最佳实践</h2>
+            
+            <div class="highlight">
+                <h3>应该使用异常的情况：</h3>
+                <ul>
+                    <li>无法在本地处理的错误</li>
+                    <li>构造函数中的失败</li>
+                    <li>资源分配失败（内存、文件等）</li>
+                    <li>数学运算错误（除零、溢出等）</li>
+                    <li>I/O操作失败</li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <h3>不应该使用异常的情况：</h3>
+                <ul>
+                    <li>正常的控制流程</li>
+                    <li>可预见的错误（使用返回值处理）</li>
+                    <li>性能关键的代码路径</li>
+                    <li>析构函数（谨慎使用）</li>
+                </ul>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>实践原则</th>
+                        <th>说明</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>按特定性捕获</td>
+                        <td>先捕获具体的异常，再捕获通用的异常</td>
+                        <td>先FileNotFound，再exception</td>
+                    </tr>
+                    <tr>
+                        <td>避免空的catch块</td>
+                        <td>空的catch块会隐藏错误</td>
+                        <td>至少记录错误信息</td>
+                    </tr>
+                    <tr>
+                        <td>使用RAII</td>
+                        <td>资源获取即初始化，确保资源释放</td>
+                        <td>智能指针、文件流等</td>
+                    </tr>
+                    <tr>
+                        <td>异常安全</td>
+                        <td>确保异常不会导致资源泄漏或数据不一致</td>
+                        <td>强异常安全保证</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chapter">
+            <h2>综合示例</h2>
+            
+            <div class="code-block">
+<pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+#include &lt;memory&gt;
+
+// 自定义异常类
+class VectorIndexException : public std::out_of_range {
+public:
+    VectorIndexException(int index, int size)
+        : std::out_of_range("索引 " + std::to_string(index) + 
+                           " 超出范围 [0, " + std::to_string(size-1) + "]") {}
+};
+
+class Calculator {
+public:
+    static double divide(double a, double b) {
+        if (b == 0) {
+            throw std::invalid_argument("除数不能为零");
+        }
+        return a / b;
+    }
+};
+
+int main() {
+    std::vector&lt;int&gt; numbers = {1, 2, 3, 4, 5};
+    
+    try {
+        // 测试向量访问
+        std::cout << "访问向量元素..." << std::endl;
+        if (numbers.size() > 10) {  // 故意制造错误条件
+            throw VectorIndexException(10, numbers.size());
+        }
+        
+        // 测试除法运算
+        std::cout << "进行除法运算..." << std::endl;
+        double result = Calculator::divide(10, 0);
+        std::cout << "结果: " << result << std::endl;
+        
+    }
+    catch (const VectorIndexException& e) {
+        std::cout << "向量索引错误: " << e.what() << std::endl;
+    }
+    catch (const std::invalid_argument& e) {
+        std::cout << "数学运算错误: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cout << "标准异常: " << e.what() << std::endl;
+    }
+    catch (...) {
+        std::cout << "未知异常发生" << std::endl;
+    }
+    
+    std::cout << "程序继续执行..." << std::endl;
+    return 0;
+}
+</pre>
+            </div>
+        </div>
+
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

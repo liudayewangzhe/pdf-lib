@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++网络编程 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 3px solid #4db6ac;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #4db6ac;
+        }
+
+        h1 {
+            color: #00695c;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #00796b;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #80cbc4;
+        }
+
+        h3 {
+            color: #00897b;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background-color: #e0f2f1;
+            border-left: 4px solid #4db6ac;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #b2dfdb;
+        }
+
+        th {
+            background-color: #4db6ac;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f8e9;
+        }
+
+        tr:hover {
+            background-color: #e0f2f1;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .code-block {
+            background-color: #f5f5f5;
+            border: 1px solid #bdbdbd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .architecture {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .comparison {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .comparison-item {
+            flex: 1;
+            min-width: 300px;
+            margin: 10px;
+            padding: 20px;
+            background-color: #f1f8e9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #4db6ac;
+            color: #00695c;
+            font-weight: bold;
+        }
+
+        .step-box {
+            background-color: #e8f5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-title {
+            color: #00796b;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+
+        .color-tcp {
+            background-color: #4db6ac;
+        }
+
+        .color-udp {
+            background-color: #ffb74d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++网络编程</h1>
+            <p>Socket编程、TCP/UDP通信、客户端服务器模型</p>
+        </header>
+
+        <section>
+            <h2>网络编程概述</h2>
+            <p>网络编程是计算机科学中一个重要的领域，它允许不同计算机之间进行数据交换和通信。C++作为一种高性能的编程语言，在网络编程领域有着广泛的应用。</p>
+            
+            <div class="highlight-box">
+                <p><strong>网络编程核心概念：</strong>网络编程主要涉及两个或多个设备之间的通信，这些设备通过网络连接，使用特定的协议进行数据交换。</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Socket编程基础</h2>
+            <p>Socket（套接字）是网络通信的端点，是支持TCP/IP协议的网络通信的基本操作单元。Socket可以看作是不同主机之间的进程进行双向通信的端点。</p>
+            
+            <h3>Socket类型</h3>
+            <table>
+                <tr>
+                    <th>Socket类型</th>
+                    <th>描述</th>
+                    <th>适用协议</th>
+                </tr>
+                <tr>
+                    <td>流式Socket (SOCK_STREAM)</td>
+                    <td>提供面向连接、可靠的数据传输服务</td>
+                    <td>TCP</td>
+                </tr>
+                <tr>
+                    <td>数据报Socket (SOCK_DGRAM)</td>
+                    <td>提供无连接、不可靠的数据传输服务</td>
+                    <td>UDP</td>
+                </tr>
+                <tr>
+                    <td>原始Socket (SOCK_RAW)</td>
+                    <td>允许对较低层协议直接访问</td>
+                    <td>ICMP等</td>
+                </tr>
+            </table>
+            
+            <h3>Socket编程基本步骤</h3>
+            <div class="step-box">
+                <div class="step-title">服务器端步骤：</div>
+                <ol>
+                    <li>创建Socket</li>
+                    <li>绑定Socket到特定地址和端口</li>
+                    <li>监听连接请求</li>
+                    <li>接受客户端连接</li>
+                    <li>发送和接收数据</li>
+                    <li>关闭连接</li>
+                </ol>
+            </div>
+            
+            <div class="step-box">
+                <div class="step-title">客户端步骤：</div>
+                <ol>
+                    <li>创建Socket</li>
+                    <li>连接到服务器</li>
+                    <li>发送和接收数据</li>
+                    <li>关闭连接</li>
+                </ol>
+            </div>
+        </section>
+
+        <section>
+            <h2>TCP与UDP通信</h2>
+            <p>TCP和UDP是传输层的两种主要协议，它们在网络通信中扮演着不同的角色。</p>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h3><span class="color-box color-tcp"></span>TCP (传输控制协议)</h3>
+                    <ul>
+                        <li>面向连接的协议</li>
+                        <li>可靠的数据传输</li>
+                        <li>保证数据顺序</li>
+                        <li>流量控制和拥塞控制</li>
+                        <li>适用于需要可靠传输的场景</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-item">
+                    <h3><span class="color-box color-udp"></span>UDP (用户数据报协议)</h3>
+                    <ul>
+                        <li>无连接的协议</li>
+                        <li>不可靠的数据传输</li>
+                        <li>不保证数据顺序</li>
+                        <li>传输效率高</li>
+                        <li>适用于实时性要求高的场景</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>TCP与UDP对比</h3>
+            <table>
+                <tr>
+                    <th>特性</th>
+                    <th>TCP</th>
+                    <th>UDP</th>
+                </tr>
+                <tr>
+                    <td>连接方式</td>
+                    <td>面向连接</td>
+                    <td>无连接</td>
+                </tr>
+                <tr>
+                    <td>可靠性</td>
+                    <td>可靠</td>
+                    <td>不可靠</td>
+                </tr>
+                <tr>
+                    <td>数据顺序</td>
+                    <td>保证顺序</td>
+                    <td>不保证顺序</td>
+                </tr>
+                <tr>
+                    <td>速度</td>
+                    <td>较慢</td>
+                    <td>较快</td>
+                </tr>
+                <tr>
+                    <td>适用场景</td>
+                    <td>文件传输、网页浏览</td>
+                    <td>视频流、在线游戏</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>客户端-服务器模型</h2>
+            <p>客户端-服务器模型是网络应用中最常见的架构模式。在这种模型中，服务器提供资源或服务，客户端请求这些资源或服务。</p>
+            
+            <div class="architecture">
+                <svg width="600" height="300" viewBox="0 0 600 300">
+                    <rect x="50" y="100" width="120" height="80" rx="10" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                    <text x="110" y="145" text-anchor="middle" fill="white" font-weight="bold">服务器</text>
+                    
+                    <rect x="430" y="50" width="120" height="60" rx="10" fill="#ffb74d" stroke="#f57c00" stroke-width="2"/>
+                    <text x="490" y="85" text-anchor="middle" fill="white" font-weight="bold">客户端A</text>
+                    
+                    <rect x="430" y="130" width="120" height="60" rx="10" fill="#ffb74d" stroke="#f57c00" stroke-width="2"/>
+                    <text x="490" y="165" text-anchor="middle" fill="white" font-weight="bold">客户端B</text>
+                    
+                    <rect x="430" y="210" width="120" height="60" rx="10" fill="#ffb74d" stroke="#f57c00" stroke-width="2"/>
+                    <text x="490" y="245" text-anchor="middle" fill="white" font-weight="bold">客户端C</text>
+                    
+                    <line x1="170" y1="140" x2="430" y2="80" stroke="#00796b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <line x1="170" y1="140" x2="430" y2="160" stroke="#00796b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <line x1="170" y1="140" x2="430" y2="240" stroke="#00796b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#00796b"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+            
+            <h3>服务器类型</h3>
+            <ul>
+                <li><strong>迭代服务器：</strong>一次处理一个客户端请求，处理完当前请求后再处理下一个</li>
+                <li><strong>并发服务器：</strong>同时处理多个客户端请求，通常通过多进程或多线程实现</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>C++ Socket编程示例</h2>
+            <p>以下是一个简单的TCP客户端-服务器模型的C++实现示例：</p>
+            
+            <h3>TCP服务器端代码</h3>
+            <div class="code-block">
+                <pre>#include &lt;iostream&gt;
+#include &lt;winsock2.h&gt;
+
+#pragma comment(lib, "ws2_32.lib")
+
+int main() {
+    // 初始化Winsock
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "WSAStartup failed" << std::endl;
+        return 1;
+    }
+    
+    // 创建Socket
+    SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverSocket == INVALID_SOCKET) {
+        std::cerr << "Socket creation failed" << std::endl;
+        WSACleanup();
+        return 1;
+    }
+    
+    // 绑定地址和端口
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_port = htons(8080);
+    
+    if (bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
+        std::cerr << "Bind failed" << std::endl;
+        closesocket(serverSocket);
+        WSACleanup();
+        return 1;
+    }
+    
+    // 监听连接
+    if (listen(serverSocket, 5) == SOCKET_ERROR) {
+        std::cerr << "Listen failed" << std::endl;
+        closesocket(serverSocket);
+        WSACleanup();
+        return 1;
+    }
+    
+    std::cout << "Server listening on port 8080..." << std::endl;
+    
+    // 接受客户端连接
+    sockaddr_in clientAddr;
+    int clientAddrLen = sizeof(clientAddr);
+    SOCKET clientSocket = accept(serverSocket, (sockaddr*)&clientAddr, &clientAddrLen);
+    if (clientSocket == INVALID_SOCKET) {
+        std::cerr << "Accept failed" << std::endl;
+        closesocket(serverSocket);
+        WSACleanup();
+        return 1;
+    }
+    
+    std::cout << "Client connected!" << std::endl;
+    
+    // 发送数据到客户端
+    const char* message = "Hello from server!";
+    send(clientSocket, message, strlen(message), 0);
+    
+    // 关闭连接
+    closesocket(clientSocket);
+    closesocket(serverSocket);
+    WSACleanup();
+    
+    return 0;
+}</pre>
+            </div>
+            
+            <h3>TCP客户端代码</h3>
+            <div class="code-block">
+                <pre>#include &lt;iostream&gt;
+#include &lt;winsock2.h&gt;
+
+#pragma comment(lib, "ws2_32.lib")
+
+int main() {
+    // 初始化Winsock
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "WSAStartup failed" << std::endl;
+        return 1;
+    }
+    
+    // 创建Socket
+    SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (clientSocket == INVALID_SOCKET) {
+        std::cerr << "Socket creation failed" << std::endl;
+        WSACleanup();
+        return 1;
+    }
+    
+    // 设置服务器地址
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    serverAddr.sin_port = htons(8080);
+    
+    // 连接到服务器
+    if (connect(clientSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
+        std::cerr << "Connection failed" << std::endl;
+        closesocket(clientSocket);
+        WSACleanup();
+        return 1;
+    }
+    
+    std::cout << "Connected to server!" << std::endl;
+    
+    // 接收服务器数据
+    char buffer[1024];
+    int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
+    if (bytesReceived > 0) {
+        buffer[bytesReceived] = '\0';
+        std::cout << "Server says: " << buffer << std::endl;
+    }
+    
+    // 关闭连接
+    closesocket(clientSocket);
+    WSACleanup();
+    
+    return 0;
+}</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>网络编程最佳实践</h2>
+            <ul>
+                <li><strong>错误处理：</strong>始终检查Socket函数的返回值，正确处理错误情况</li>
+                <li><strong>资源管理：</strong>确保在程序结束时正确关闭Socket和清理Winsock资源</li>
+                <li><strong>缓冲区管理：</strong>合理设置缓冲区大小，避免数据丢失或溢出</li>
+                <li><strong>并发处理：</strong>对于服务器程序，考虑使用多线程或异步I/O处理多个客户端连接</li>
+                <li><strong>安全性：</strong>验证输入数据，防止缓冲区溢出等安全漏洞</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>蓝海资料掘金营</p>
+        </footer>
+    </div>
+</body>
+</html>

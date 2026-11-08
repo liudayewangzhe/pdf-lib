@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++基础语法 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 3px solid #4db6ac;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed #4db6ac;
+        }
+        
+        h1 {
+            color: #00695c;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #00796b;
+            margin: 25px 0 15px;
+            padding-left: 15px;
+            border-left: 5px solid #4db6ac;
+        }
+        
+        h3 {
+            color: #00897b;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 2px solid #80cbc4;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0f2f1;
+        }
+        
+        th {
+            background-color: #4db6ac;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f1f8e9;
+        }
+        
+        tr:hover {
+            background-color: #e0f2f1;
+        }
+        
+        pre {
+            background: #f5f5f5;
+            border-left: 4px solid #4db6ac;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        code {
+            background: #e8f5e9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #00695c;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .note {
+            background: #fff9c4;
+            border-left: 4px solid #ffd54f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #4db6ac;
+            color: #00796b;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .keyword {
+            background: #ffecb3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .example-box {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++基础语法</h1>
+            <p>注释、变量与常量、基本数据类型、关键字与标识符</p>
+        </header>
+        
+        <section>
+            <h2>一、注释</h2>
+            <div class="card">
+                <p>注释是程序中用于解释代码的文字，编译器会忽略注释内容。C++中有两种注释方式：</p>
+                
+                <h3>1. 单行注释</h3>
+                <p>使用双斜杠<code>//</code>，从<code>//</code>开始到行尾的内容都是注释。</p>
+                <pre>// 这是一个单行注释
+int age = 18; // 声明一个整数变量age并赋值为18</pre>
+                
+                <h3>2. 多行注释</h3>
+                <p>使用<code>/*</code>和<code>*/</code>包围注释内容，可以跨越多行。</p>
+                <pre>/*
+这是一个多行注释
+可以跨越多行
+常用于函数说明或复杂逻辑解释
+*/
+int calculate(int a, int b) {
+    return a + b;
+}</pre>
+                
+                <div class="note">
+                    <strong>注意：</strong> 注释不能嵌套使用，良好的注释习惯是优秀程序员的标志。
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>二、变量与常量</h2>
+            <div class="card">
+                <h3>1. 变量</h3>
+                <p>变量是程序中用于存储数据的内存空间，其值可以在程序运行过程中改变。</p>
+                
+                <p><strong>变量声明语法：</strong></p>
+                <pre>数据类型 变量名;</pre>
+                
+                <p><strong>变量初始化：</strong></p>
+                <pre>数据类型 变量名 = 初始值;</pre>
+                
+                <div class="example-box">
+                    <p><strong>示例：</strong></p>
+                    <pre>int age;           // 声明一个整数变量
+age = 18;         // 给变量赋值
+int score = 95;   // 声明并初始化变量
+double price = 19.99;  // 声明双精度浮点数变量
+char grade = 'A';      // 声明字符变量</pre>
+                </div>
+                
+                <h3>2. 常量</h3>
+                <p>常量是其值在程序运行过程中不能改变的量。</p>
+                
+                <p><strong>定义常量的两种方式：</strong></p>
+                <ul>
+                    <li><code>#define</code> 预处理器</li>
+                    <li><code>const</code> 关键字</li>
+                </ul>
+                
+                <div class="example-box">
+                    <p><strong>示例：</strong></p>
+                    <pre>#define PI 3.14159          // 使用#define定义常量
+const int MAX_SIZE = 100;  // 使用const定义常量</pre>
+                </div>
+                
+                <div class="svg-container">
+                    <svg width="400" height="100" viewBox="0 0 400 100">
+                        <rect x="50" y="30" width="100" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="100" y="55" text-anchor="middle" fill="white" font-weight="bold">变量</text>
+                        <text x="100" y="75" text-anchor="middle" fill="white" font-size="12">值可改变</text>
+                        
+                        <rect x="250" y="30" width="100" height="40" fill="#ff9800" stroke="#e65100" stroke-width="2"/>
+                        <text x="300" y="55" text-anchor="middle" fill="white" font-weight="bold">常量</text>
+                        <text x="300" y="75" text-anchor="middle" fill="white" font-size="12">值不可改变</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>三、基本数据类型</h2>
+            <div class="card">
+                <p>C++提供了多种基本数据类型来存储不同种类的数据。</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>数据类型</th>
+                            <th>描述</th>
+                            <th>大小</th>
+                            <th>取值范围</th>
+                            <th>示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>int</code></td>
+                            <td>整型</td>
+                            <td>4字节</td>
+                            <td>-2,147,483,648 到 2,147,483,647</td>
+                            <td><code>int age = 18;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>float</code></td>
+                            <td>单精度浮点型</td>
+                            <td>4字节</td>
+                            <td>±3.4e±38（约7位有效数字）</td>
+                            <td><code>float price = 19.99f;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>double</code></td>
+                            <td>双精度浮点型</td>
+                            <td>8字节</td>
+                            <td>±1.7e±308（约15位有效数字）</td>
+                            <td><code>double pi = 3.14159;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>char</code></td>
+                            <td>字符型</td>
+                            <td>1字节</td>
+                            <td>-128 到 127 或 0 到 255</td>
+                            <td><code>char grade = 'A';</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>bool</code></td>
+                            <td>布尔型</td>
+                            <td>1字节</td>
+                            <td>true 或 false</td>
+                            <td><code>bool isPass = true;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>void</code></td>
+                            <td>无类型</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            <td>用于函数无返回值</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="svg-container">
+                    <svg width="500" height="200" viewBox="0 0 500 200">
+                        <rect x="50" y="30" width="80" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="90" y="55" text-anchor="middle" fill="white">int</text>
+                        
+                        <rect x="150" y="30" width="80" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="190" y="55" text-anchor="middle" fill="white">float</text>
+                        
+                        <rect x="250" y="30" width="80" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="290" y="55" text-anchor="middle" fill="white">double</text>
+                        
+                        <rect x="350" y="30" width="80" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="390" y="55" text-anchor="middle" fill="white">char</text>
+                        
+                        <rect x="200" y="100" width="80" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="240" y="125" text-anchor="middle" fill="white">bool</text>
+                        
+                        <text x="250" y="170" text-anchor="middle" fill="#00796b" font-weight="bold">C++基本数据类型</text>
+                    </svg>
+                </div>
+                
+                <div class="example-box">
+                    <p><strong>数据类型使用示例：</strong></p>
+                    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 整型
+    int age = 18;
+    
+    // 浮点型
+    float height = 1.75f;
+    double weight = 65.5;
+    
+    // 字符型
+    char grade = 'A';
+    
+    // 布尔型
+    bool isStudent = true;
+    
+    // 输出变量值
+    cout << "年龄: " << age << endl;
+    cout << "身高: " << height << "米" << endl;
+    cout << "体重: " << weight << "公斤" << endl;
+    cout << "成绩: " << grade << endl;
+    cout << "是学生: " << isStudent << endl;
+    
+    return 0;
+}</pre>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>四、关键字与标识符</h2>
+            <div class="card">
+                <h3>1. 关键字</h3>
+                <p>关键字是C++语言中预先定义的、具有特殊含义的单词，不能用作标识符。</p>
+                
+                <p><strong>常见C++关键字：</strong></p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0;">
+                    <span class="keyword">int</span>
+                    <span class="keyword">float</span>
+                    <span class="keyword">double</span>
+                    <span class="keyword">char</span>
+                    <span class="keyword">bool</span>
+                    <span class="keyword">void</span>
+                    <span class="keyword">if</span>
+                    <span class="keyword">else</span>
+                    <span class="keyword">for</span>
+                    <span class="keyword">while</span>
+                    <span class="keyword">do</span>
+                    <span class="keyword">switch</span>
+                    <span class="keyword">case</span>
+                    <span class="keyword">break</span>
+                    <span class="keyword">continue</span>
+                    <span class="keyword">return</span>
+                    <span class="keyword">class</span>
+                    <span class="keyword">struct</span>
+                    <span class="keyword">public</span>
+                    <span class="keyword">private</span>
+                    <span class="keyword">protected</span>
+                    <span class="keyword">new</span>
+                    <span class="keyword">delete</span>
+                    <span class="keyword">const</span>
+                    <span class="keyword">static</span>
+                </div>
+                
+                <h3>2. 标识符</h3>
+                <p>标识符是程序员为变量、函数、类等起的名字。</p>
+                
+                <p><strong>标识符命名规则：</strong></p>
+                <ul>
+                    <li>只能包含字母、数字和下划线（_）</li>
+                    <li>必须以字母或下划线开头</li>
+                    <li>不能是C++关键字</li>
+                    <li>区分大小写</li>
+                </ul>
+                
+                <p><strong>标识符命名规范（良好编程习惯）：</strong></p>
+                <ul>
+                    <li>使用有意义的名称</li>
+                    <li>变量名使用小写字母，单词间用下划线分隔</li>
+                    <li>常量名使用大写字母，单词间用下划线分隔</li>
+                    <li>函数名使用小写字母，单词间用下划线分隔或驼峰命名法</li>
+                </ul>
+                
+                <div class="example-box">
+                    <p><strong>标识符示例：</strong></p>
+                    <pre>// 合法的标识符
+int age;
+float average_score;
+double pi_value;
+char first_name;
+bool is_valid;
+
+// 不合法的标识符
+int 2age;        // 不能以数字开头
+float average-score; // 不能包含连字符
+double class;    // 不能使用关键字</pre>
+                </div>
+                
+                <div class="svg-container">
+                    <svg width="450" height="150" viewBox="0 0 450 150">
+                        <rect x="50" y="30" width="150" height="40" fill="#ff9800" stroke="#e65100" stroke-width="2"/>
+                        <text x="125" y="55" text-anchor="middle" fill="white" font-weight="bold">关键字</text>
+                        <text x="125" y="75" text-anchor="middle" fill="white" font-size="12">C++预定义，有特殊含义</text>
+                        
+                        <rect x="250" y="30" width="150" height="40" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="325" y="55" text-anchor="middle" fill="white" font-weight="bold">标识符</text>
+                        <text x="325" y="75" text-anchor="middle" fill="white" font-size="12">程序员自定义名称</text>
+                        
+                        <line x1="200" y1="50" x2="250" y2="50" stroke="#00796b" stroke-width="2"/>
+                        <text x="225" y="45" text-anchor="middle" fill="#00796b" font-size="12">不能相同</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>五、综合示例</h2>
+            <div class="card">
+                <p>下面是一个综合示例，演示了注释、变量、常量、数据类型和标识符的使用：</p>
+                
+                <pre>#include &lt;iostream&gt;
+using namespace std;
+
+// 使用const定义常量
+const double PI = 3.14159;
+const int MAX_STUDENTS = 50;
+
+int main() {
+    // 变量声明和初始化
+    int student_count = 30;
+    float average_score = 85.5f;
+    char class_grade = 'B';
+    bool is_full = false;
+    
+    // 输出信息
+    cout << "班级信息：" << endl;
+    cout << "学生人数: " << student_count << endl;
+    cout << "平均分: " << average_score << endl;
+    cout << "班级等级: " << class_grade << endl;
+    cout << "是否满员: " << (is_full ? "是" : "否") << endl;
+    
+    // 计算圆的面积
+    double radius = 5.0;
+    double area = PI * radius * radius;
+    cout << "半径为" << radius << "的圆面积: " << area << endl;
+    
+    return 0;
+}</pre>
+            </div>
+        </section>
+        
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

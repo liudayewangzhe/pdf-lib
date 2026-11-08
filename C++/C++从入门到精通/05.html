@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++流程控制 - 从入门到精通</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #fff3e0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #42a5f5, #29b6f6);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #0288d1;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .chapter-nav {
+            background: #bbdefb;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chapter-nav a {
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .chapter-nav a:hover {
+            background: #64b5f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #42a5f5;
+        }
+
+        h2 {
+            color: #1565c0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #90caf9;
+        }
+
+        h3 {
+            color: #0288d1;
+            margin: 25px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        pre {
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #e3f2fd;
+            color: #1565c0;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        tr:hover {
+            background: #f1f8e9;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .comparison {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .comparison-item {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background: linear-gradient(135deg, #0288d1, #0277bd);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .chapter-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++流程控制</h1>
+            <div class="subtitle">if条件语句、switch多分支语句、三元运算符</div>
+        </header>
+
+        <nav class="chapter-nav">
+            <a href="#if-statement">if条件语句</a>
+            <a href="#switch-statement">switch多分支语句</a>
+            <a href="#ternary-operator">三元运算符</a>
+            <a href="#comparison">对比总结</a>
+            <a href="#practice">实战练习</a>
+        </nav>
+
+        <div class="content">
+            <section id="introduction">
+                <h2>流程控制简介</h2>
+                <p>流程控制是编程中的核心概念，它决定了程序执行的顺序和条件。在C++中，流程控制语句允许我们根据不同的条件执行不同的代码块，或者重复执行某些代码。掌握流程控制是成为合格程序员的关键一步。</p>
+                
+                <div class="svg-container">
+                    <svg width="400" height="100" viewBox="0 0 400 100">
+                        <rect x="10" y="10" width="380" height="80" rx="10" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2"/>
+                        <text x="200" y="35" text-anchor="middle" fill="#1565c0" font-size="16" font-weight="bold">程序开始</text>
+                        <text x="200" y="60" text-anchor="middle" fill="#1565c0" font-size="14">条件判断 → 执行代码 → 程序结束</text>
+                    </svg>
+                </div>
+            </section>
+
+            <section id="if-statement">
+                <h2>if条件语句</h2>
+                <p>if语句是C++中最基本的条件控制语句，它根据条件的真假来决定是否执行特定的代码块。</p>
+
+                <h3>基本语法</h3>
+                <div class="code-block">
+                    <pre>if (条件表达式) {
+    // 如果条件为真，执行这里的代码
+}</pre>
+                </div>
+
+                <h3>if-else语句</h3>
+                <div class="code-block">
+                    <pre>if (条件表达式) {
+    // 如果条件为真，执行这里的代码
+} else {
+    // 如果条件为假，执行这里的代码
+}</pre>
+                </div>
+
+                <h3>if-else if-else语句</h3>
+                <div class="code-block">
+                    <pre>if (条件1) {
+    // 如果条件1为真，执行这里的代码
+} else if (条件2) {
+    // 如果条件2为真，执行这里的代码
+} else {
+    // 如果所有条件都为假，执行这里的代码
+}</pre>
+                </div>
+
+                <h3>示例代码</h3>
+                <div class="code-block">
+                    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int score;
+    cout << "请输入你的分数: ";
+    cin >> score;
+    
+    if (score >= 90) {
+        cout << "优秀！" << endl;
+    } else if (score >= 80) {
+        cout << "良好" << endl;
+    } else if (score >= 60) {
+        cout << "及格" << endl;
+    } else {
+        cout << "不及格，需要努力！" << endl;
+    }
+    
+    return 0;
+}</pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>小贴士：</strong> 在if语句中，如果代码块只有一行，可以省略大括号，但为了代码清晰和避免错误，建议始终使用大括号。
+                </div>
+            </section>
+
+            <section id="switch-statement">
+                <h2>switch多分支语句</h2>
+                <p>switch语句用于基于不同的条件值执行不同的代码块，特别适合处理多个固定值的情况。</p>
+
+                <h3>基本语法</h3>
+                <div class="code-block">
+                    <pre>switch (表达式) {
+    case 值1:
+        // 当表达式等于值1时执行
+        break;
+    case 值2:
+        // 当表达式等于值2时执行
+        break;
+    default:
+        // 当没有匹配的case时执行
+}</pre>
+                </div>
+
+                <h3>switch语句的特点</h3>
+                <table>
+                    <tr>
+                        <th>特性</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>表达式类型</td>
+                        <td>只能是整型、字符型或枚举类型</td>
+                    </tr>
+                    <tr>
+                        <td>case值</td>
+                        <td>必须是常量表达式，不能是变量</td>
+                    </tr>
+                    <tr>
+                        <td>break语句</td>
+                        <td>用于跳出switch，防止case穿透</td>
+                    </tr>
+                    <tr>
+                        <td>default</td>
+                        <td>可选的，处理未匹配的情况</td>
+                    </tr>
+                </table>
+
+                <h3>示例代码</h3>
+                <div class="code-block">
+                    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    char grade;
+    cout << "请输入你的等级(A/B/C/D/E): ";
+    cin >> grade;
+    
+    switch (grade) {
+        case 'A':
+            cout << "优秀！" << endl;
+            break;
+        case 'B':
+            cout << "良好" << endl;
+            break;
+        case 'C':
+            cout << "中等" << endl;
+            break;
+        case 'D':
+            cout << "及格" << endl;
+            break;
+        case 'E':
+            cout << "不及格" << endl;
+            break;
+        default:
+            cout << "无效的等级！" << endl;
+    }
+    
+    return 0;
+}</pre>
+                </div>
+
+                <div class="warning-box">
+                    <strong>注意：</strong> 忘记写break语句会导致"case穿透"，即程序会继续执行下一个case的代码，直到遇到break或switch结束。
+                </div>
+            </section>
+
+            <section id="ternary-operator">
+                <h2>三元运算符</h2>
+                <p>三元运算符是if-else语句的简洁形式，也称为条件运算符。</p>
+
+                <h3>基本语法</h3>
+                <div class="code-block">
+                    <pre>条件 ? 表达式1 : 表达式2</pre>
+                </div>
+                <p>如果条件为真，整个表达式的结果是表达式1的值；如果条件为假，结果是表达式2的值。</p>
+
+                <h3>三元运算符 vs if-else</h3>
+                <div class="comparison">
+                    <div class="comparison-item">
+                        <h4>三元运算符</h4>
+                        <div class="code-block">
+                            <pre>int max = (a > b) ? a : b;</pre>
+                        </div>
+                        <p><strong>优点：</strong></p>
+                        <ul>
+                            <li>代码简洁</li>
+                            <li>可以直接用在表达式中</li>
+                            <li>适合简单的条件赋值</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-item">
+                        <h4>if-else语句</h4>
+                        <div class="code-block">
+                            <pre>int max;
+if (a > b) {
+    max = a;
+} else {
+    max = b;
+}</pre>
+                        </div>
+                        <p><strong>优点：</strong></p>
+                        <ul>
+                            <li>可读性好</li>
+                            <li>可以执行多条语句</li>
+                            <li>适合复杂的条件逻辑</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>嵌套三元运算符</h3>
+                <div class="code-block">
+                    <pre>// 嵌套三元运算符示例
+int result = (a > b) ? 
+             ((a > c) ? a : c) : 
+             ((b > c) ? b : c);</pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>最佳实践：</strong> 三元运算符适合简单的条件判断，但嵌套过多会降低代码可读性，此时应使用if-else语句。
+                </div>
+            </section>
+
+            <section id="comparison">
+                <h2>三种流程控制方式对比</h2>
+                <table>
+                    <tr>
+                        <th>特性</th>
+                        <th>if语句</th>
+                        <th>switch语句</th>
+                        <th>三元运算符</th>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>范围判断、复杂条件</td>
+                        <td>固定值匹配</td>
+                        <td>简单条件赋值</td>
+                    </tr>
+                    <tr>
+                        <td>可读性</td>
+                        <td>高</td>
+                        <td>中</td>
+                        <td>简单时高，复杂时低</td>
+                    </tr>
+                    <tr>
+                        <td>灵活性</td>
+                        <td>高</td>
+                        <td>中</td>
+                        <td>低</td>
+                    </tr>
+                    <tr>
+                        <td>执行效率</td>
+                        <td>取决于条件复杂度</td>
+                        <td>通常较高（跳转表）</td>
+                        <td>高</td>
+                    </tr>
+                </table>
+
+                <div class="svg-container">
+                    <svg width="500" height="200" viewBox="0 0 500 200">
+                        <!-- 决策流程图 -->
+                        <rect x="50" y="30" width="100" height="40" rx="5" fill="#bbdefb" stroke="#42a5f5"/>
+                        <text x="100" y="55" text-anchor="middle" fill="#1565c0">开始判断</text>
+                        
+                        <rect x="200" y="30" width="100" height="40" rx="5" fill="#c8e6c9" stroke="#4caf50"/>
+                        <text x="250" y="55" text-anchor="middle" fill="#2e7d32">if语句</text>
+                        
+                        <rect x="350" y="30" width="100" height="40" rx="5" fill="#ffecb3" stroke="#ffc107"/>
+                        <text x="400" y="55" text-anchor="middle" fill="#ff8f00">switch语句</text>
+                        
+                        <rect x="200" y="100" width="100" height="40" rx="5" fill="#ffcdd2" stroke="#f44336"/>
+                        <text x="250" y="125" text-anchor="middle" fill="#c62828">三元运算符</text>
+                        
+                        <rect x="350" y="100" width="100" height="40" rx="5" fill="#e1bee7" stroke="#9c27b0"/>
+                        <text x="400" y="125" text-anchor="middle" fill="#6a1b9a">程序结束</text>
+                        
+                        <!-- 连接线 -->
+                        <path d="M150 50 L200 50" stroke="#42a5f5" stroke-width="2" fill="none"/>
+                        <path d="M300 50 L350 50" stroke="#42a5f5" stroke-width="2" fill="none"/>
+                        <path d="M250 70 L250 100" stroke="#42a5f5" stroke-width="2" fill="none"/>
+                        <path d="M400 70 L400 100" stroke="#42a5f5" stroke-width="2" fill="none"/>
+                        <path d="M300 120 L350 120" stroke="#42a5f5" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+            </section>
+
+            <section id="practice">
+                <h2>实战练习</h2>
+                <p>现在让我们通过一个综合练习来巩固所学知识：</p>
+
+                <h3>练习题目：成绩评级系统</h3>
+                <p>编写一个程序，根据用户输入的成绩输出相应的等级：</p>
+                <ul>
+                    <li>90-100: A</li>
+                    <li>80-89: B</li>
+                    <li>70-79: C</li>
+                    <li>60-69: D</li>
+                    <li>0-59: E</li>
+                </ul>
+
+                <h3>参考实现</h3>
+                <div class="code-block">
+                    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int score;
+    char grade;
+    
+    cout << "请输入成绩(0-100): ";
+    cin >> score;
+    
+    // 使用if-else语句确定等级
+    if (score >= 90) {
+        grade = 'A';
+    } else if (score >= 80) {
+        grade = 'B';
+    } else if (score >= 70) {
+        grade = 'C';
+    } else if (score >= 60) {
+        grade = 'D';
+    } else {
+        grade = 'E';
+    }
+    
+    // 使用switch语句输出评价
+    switch (grade) {
+        case 'A':
+            cout << "优秀！继续保持！" << endl;
+            break;
+        case 'B':
+            cout << "良好，还有进步空间！" << endl;
+            break;
+        case 'C':
+            cout << "中等，需要更加努力！" << endl;
+            break;
+        case 'D':
+            cout << "及格，要加油了！" << endl;
+            break;
+        case 'E':
+            cout << "不及格，需要加倍努力！" << endl;
+            break;
+    }
+    
+    // 使用三元运算符判断是否及格
+    string result = (score >= 60) ? "恭喜你及格了！" : "很遗憾，不及格。";
+    cout << result << endl;
+    
+    return 0;
+}</pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>挑战：</strong> 尝试修改程序，添加输入验证，确保用户输入的成绩在0-100范围内，如果不在范围内，要求重新输入。
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

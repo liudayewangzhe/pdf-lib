@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++内联函数详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(41, 182, 246, 0.3);
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid #4fc3f7;
+        }
+        
+        h2 {
+            color: #0288d1;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1f5fe;
+        }
+        
+        h3 {
+            color: #039be5;
+            margin: 25px 0 15px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: #4fc3f7;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8fdff;
+        }
+        
+        .comparison-table tr:hover {
+            background: #e1f5fe;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .feature-list li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background: #e1f5fe;
+            border-radius: 8px;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .svg-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fdff;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .architecture-diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            background: linear-gradient(45deg, #0288d1, #02669d);
+            color: white;
+            border-radius: 15px;
+            font-size: 1.2em;
+            box-shadow: 0 -5px 20px rgba(2, 136, 209, 0.3);
+        }
+        
+        .note-box {
+            background: #fff9c4;
+            border-left: 4px solid #ffd600;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .highlight {
+            background: #e3f2fd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++内联函数详解</h1>
+            <p class="subtitle">第30课：内联函数定义、内联与宏的区别</p>
+        </header>
+        
+        <section class="content-section">
+            <h2>什么是内联函数？</h2>
+            <p>内联函数是C++中的一种特殊函数，通过在函数定义前添加<code class="highlight">inline</code>关键字来声明。编译器在编译时会将内联函数的代码直接插入到调用处，而不是生成函数调用指令。</p>
+            
+            <div class="svg-container">
+                <svg class="architecture-diagram" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#4fc3f7" />
+                            <stop offset="100%" stop-color="#29b6f6" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect x="50" y="80" width="200" height="60" rx="10" fill="url(#grad1)" stroke="#0288d1" stroke-width="2" />
+                    <text x="150" y="115" text-anchor="middle" fill="white" font-size="16" font-weight="bold">函数调用</text>
+                    
+                    <path d="M250 110 L300 110 L300 50 L350 50" stroke="#0288d1" stroke-width="3" fill="none" />
+                    <polygon points="350,50 340,45 340,55" fill="#0288d1" />
+                    
+                    <rect x="350" y="30" width="200" height="60" rx="10" fill="#e1f5fe" stroke="#0288d1" stroke-width="2" />
+                    <text x="450" y="65" text-anchor="middle" fill="#0288d1" font-size="14">函数体执行</text>
+                    
+                    <path d="M550 60 L600 60 L600 110 L650 110" stroke="#0288d1" stroke-width="3" fill="none" />
+                    <polygon points="650,110 640,105 640,115" fill="#0288d1" />
+                    
+                    <rect x="650" y="80" width="100" height="60" rx="10" fill="url(#grad1)" stroke="#0288d1" stroke-width="2" />
+                    <text x="700" y="115" text-anchor="middle" fill="white" font-size="16" font-weight="bold">返回结果</text>
+                    
+                    <text x="400" y="180" text-anchor="middle" fill="#0288d1" font-size="14" font-weight="bold">普通函数调用流程</text>
+                </svg>
+            </div>
+            
+            <h3>内联函数的基本语法</h3>
+            <div class="code-block">
+<pre>// 内联函数的定义
+inline int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+// 使用内联函数
+int main() {
+    int x = 10, y = 20;
+    int result = max(x, y);  // 编译器会将max函数的代码直接插入到这里
+    return 0;
+}</pre>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2>内联函数的特点</h2>
+            <ul class="feature-list">
+                <li><strong>减少函数调用开销</strong>：避免了函数调用时的参数压栈、跳转等操作</li>
+                <li><strong>提高程序执行效率</strong>：特别适合小型、频繁调用的函数</li>
+                <li><strong>保持代码结构清晰</strong>：既保持了函数的模块化，又获得了类似宏的效率</li>
+                <li><strong>编译器建议</strong>：inline关键字只是给编译器的建议，编译器有权决定是否真正内联</li>
+                <li><strong>定义位置</strong>：内联函数通常需要在头文件中定义</li>
+            </ul>
+            
+            <div class="svg-container">
+                <svg class="architecture-diagram" viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#66bb6a" />
+                            <stop offset="100%" stop-color="#4caf50" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect x="100" y="50" width="250" height="60" rx="10" fill="url(#grad2)" stroke="#2e7d32" stroke-width="2" />
+                    <text x="225" y="85" text-anchor="middle" fill="white" font-size="16" font-weight="bold">源代码调用内联函数</text>
+                    
+                    <path d="M350 80 L400 80" stroke="#2e7d32" stroke-width="3" fill="none" />
+                    <polygon points="400,80 390,75 390,85" fill="#2e7d32" />
+                    
+                    <rect x="400" y="50" width="300" height="60" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" />
+                    <text x="550" y="85" text-anchor="middle" fill="#2e7d32" font-size="14">编译器将函数体直接插入调用处</text>
+                    
+                    <path d="M700 80 L750 80" stroke="#2e7d32" stroke-width="3" fill="none" />
+                    <polygon points="750,80 740,75 740,85" fill="#2e7d32" />
+                    
+                    <rect x="100" y="140" width="600" height="60" rx="10" fill="url(#grad2)" stroke="#2e7d32" stroke-width="2" />
+                    <text x="400" y="175" text-anchor="middle" fill="white" font-size="16" font-weight="bold">生成的目标代码（无函数调用）</text>
+                    
+                    <text x="400" y="230" text-anchor="middle" fill="#2e7d32" font-size="14" font-weight="bold">内联函数编译流程</text>
+                </svg>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2>内联函数与宏的区别</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>比较项</th>
+                        <th>内联函数</th>
+                        <th>宏</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>处理时机</strong></td>
+                        <td>编译期间</td>
+                        <td>预处理期间</td>
+                    </tr>
+                    <tr>
+                        <td><strong>类型检查</strong></td>
+                        <td>有严格的类型检查</td>
+                        <td>无类型检查，只是文本替换</td>
+                    </tr>
+                    <tr>
+                        <td><strong>安全性</strong></td>
+                        <td>安全，避免副作用</td>
+                        <td>可能产生副作用</td>
+                    </tr>
+                    <tr>
+                        <td><strong>调试支持</strong></td>
+                        <td>支持调试</td>
+                        <td>不支持调试</td>
+                    </tr>
+                    <tr>
+                        <td><strong>作用域</strong></td>
+                        <td>遵循C++作用域规则</td>
+                        <td>无作用域概念</td>
+                    </tr>
+                    <tr>
+                        <td><strong>适用场景</strong></td>
+                        <td>小型、频繁调用的函数</td>
+                        <td>简单的文本替换</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>示例对比</h3>
+            <div class="code-block">
+<pre>// 使用宏
+#define MAX_MACRO(a, b) ((a) > (b) ? (a) : (b))
+
+// 使用内联函数
+inline int max_inline(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int main() {
+    int x = 5, y = 10;
+    
+    // 宏调用 - 可能产生副作用
+    int result1 = MAX_MACRO(++x, y);  // x可能被递增两次！
+    
+    // 内联函数调用 - 安全
+    int result2 = max_inline(++x, y);  // x只被递增一次
+    
+    return 0;
+}</pre>
+            </div>
+            
+            <div class="note-box">
+                <strong>注意：</strong>宏由于是简单的文本替换，在涉及自增/自减操作时容易产生不可预期的副作用，而内联函数则不会出现这种问题。
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2>内联函数的使用场景</h2>
+            
+            <ul class="feature-list">
+                <li><strong>小型函数</strong>：函数体较小（通常1-5行代码）</li>
+                <li><strong>频繁调用</strong>：在循环或频繁执行的代码路径中</li>
+                <li><strong>性能关键</strong>：对性能要求较高的场景</li>
+                <li><strong>替代宏</strong>：需要类型安全且高效的简单操作</li>
+            </ul>
+            
+            <h3>实际应用示例</h3>
+            <div class="code-block">
+<pre>// 数学计算类内联函数
+inline double square(double x) {
+    return x * x;
+}
+
+inline bool isEven(int n) {
+    return (n % 2) == 0;
+}
+
+// 访问器类内联函数
+class Point {
+private:
+    int x, y;
+public:
+    inline int getX() const { return x; }
+    inline int getY() const { return y; }
+    inline void setX(int newX) { x = newX; }
+    inline void setY(int newY) { y = newY; }
+};
+
+// 模板内联函数
+template&lt;typename T&gt;
+inline T min(const T& a, const T& b) {
+    return (a < b) ? a : b;
+}</pre>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2>内联函数的注意事项</h2>
+            
+            <ul class="feature-list">
+                <li><strong>编译器决定权</strong>：inline只是建议，编译器可能忽略</li>
+                <li><strong>代码膨胀</strong>：过度使用可能导致可执行文件变大</li>
+                <li><strong>递归函数</strong>：递归函数通常不能被内联</li>
+                <li><strong>虚函数</strong>：虚函数调用通常不能被内联</li>
+                <li><strong>函数指针</strong>：通过函数指针调用的函数不能被内联</li>
+            </ul>
+            
+            <div class="note-box">
+                <strong>最佳实践：</strong>让编译器自动决定是否内联通常是最佳选择。现代编译器很智能，能够自动内联适合的函数，无需手动指定inline。
+            </div>
+        </section>
+        
+        <footer>
+            <p>蓝海资料掘金营</p>
+        </footer>
+    </div>
+</body>
+</html>

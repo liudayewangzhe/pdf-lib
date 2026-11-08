@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++结构体详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 50%, #0288d1 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #01579b;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4fc3f7;
+        }
+
+        h2 {
+            color: #0277bd;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #81d4fa;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #0288d1;
+            margin: 20px 0 15px;
+            font-size: 1.4em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #4fc3f7;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0f7fa;
+        }
+
+        tr:nth-child(even) {
+            background: #f1f8e9;
+        }
+
+        tr:hover {
+            background: #e1f5fe;
+        }
+
+        .code-block {
+            background: #263238;
+            color: #e0f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #4fc3f7;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+            font-size: 1em;
+        }
+
+        .svg-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 15px;
+            background: #f9fbe7;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #01579b 0%, #0277bd 50%, #0288d1 100%);
+            color: white;
+            margin-top: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .example-card {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #7cb342;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++ 结构体详解</h1>
+            <div class="subtitle">结构体定义、结构体数组、结构体指针 - 蓝海资料掘金营</div>
+        </header>
+
+        <div class="content">
+            <section>
+                <h2>什么是结构体？</h2>
+                <p>结构体是C++中一种重要的复合数据类型，它允许我们将不同类型的数据组合在一起，形成一个整体。结构体就像是一个"数据容器"，可以把相关的数据打包在一起管理。</p>
+                
+                <div class="svg-container">
+                    <svg width="400" height="200" viewBox="0 0 400 200">
+                        <rect x="50" y="50" width="300" height="100" fill="#4fc3f7" stroke="#0277bd" stroke-width="3" rx="10"/>
+                        <text x="200" y="80" text-anchor="middle" fill="white" font-size="18" font-weight="bold">结构体</text>
+                        <rect x="80" y="100" width="60" height="30" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                        <text x="110" y="120" text-anchor="middle" fill="#01579b" font-size="12">整型</text>
+                        <rect x="160" y="100" width="60" height="30" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                        <text x="190" y="120" text-anchor="middle" fill="#01579b" font-size="12">浮点型</text>
+                        <rect x="240" y="100" width="60" height="30" fill="#81d4fa" stroke="#01579b" stroke-width="2" rx="5"/>
+                        <text x="270" y="120" text-anchor="middle" fill="#01579b" font-size="12">字符型</text>
+                    </svg>
+                </div>
+
+                <div class="tip-box">
+                    <strong>小贴士：</strong> 结构体非常适合用来表示现实世界中的对象，比如学生、图书、坐标点等。
+                </div>
+            </section>
+
+            <section>
+                <h2>结构体定义</h2>
+                <p>定义结构体需要使用 <span class="highlight">struct</span> 关键字，语法格式如下：</p>
+                
+                <div class="code-block">
+                    <pre>struct 结构体名称 {
+    数据类型 成员变量1;
+    数据类型 成员变量2;
+    // ... 更多成员变量
+};</pre>
+                </div>
+
+                <h3>结构体定义示例</h3>
+                <div class="code-block">
+                    <pre>// 定义学生结构体
+struct Student {
+    int id;          // 学号
+    string name;     // 姓名
+    int age;         // 年龄
+    float score;     // 成绩
+};</pre>
+                </div>
+
+                <div class="example-grid">
+                    <div class="example-card">
+                        <h3>坐标点结构体</h3>
+                        <div class="code-block">
+                            <pre>struct Point {
+    int x;  // x坐标
+    int y;  // y坐标
+};</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h3>图书结构体</h3>
+                        <div class="code-block">
+                            <pre>struct Book {
+    string title;     // 书名
+    string author;    // 作者
+    float price;      // 价格
+    int pages;        // 页数
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>注意：</strong> 结构体定义末尾的分号不能省略！
+                </div>
+            </section>
+
+            <section>
+                <h2>结构体变量声明和初始化</h2>
+                
+                <h3>声明结构体变量</h3>
+                <div class="code-block">
+                    <pre>// 方法1：先定义结构体，再声明变量
+struct Student {
+    int id;
+    string name;
+    int age;
+};
+
+Student stu1;  // 声明一个Student类型的变量</pre>
+                </div>
+
+                <div class="code-block">
+                    <pre>// 方法2：定义结构体的同时声明变量
+struct Student {
+    int id;
+    string name;
+    int age;
+} stu1, stu2;  // 同时声明两个变量</pre>
+                </div>
+
+                <h3>结构体初始化</h3>
+                <div class="code-block">
+                    <pre>// 方法1：逐个成员初始化
+Student stu1;
+stu1.id = 1001;
+stu1.name = "张三";
+stu1.age = 18;
+
+// 方法2：声明时初始化
+Student stu2 = {1002, "李四", 19};
+
+// 方法3：C++11统一初始化
+Student stu3{1003, "王五", 20};</pre>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>初始化方式</th>
+                            <th>语法示例</th>
+                            <th>特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>逐个成员初始化</td>
+                            <td>stu.id = 1001;</td>
+                            <td>灵活，可以只初始化部分成员</td>
+                        </tr>
+                        <tr>
+                            <td>声明时初始化</td>
+                            <td>Student stu = {1001, "张三", 18};</td>
+                            <td>简洁，需要按顺序初始化所有成员</td>
+                        </tr>
+                        <tr>
+                            <td>C++11统一初始化</td>
+                            <td>Student stu{1001, "张三", 18};</td>
+                            <td>现代C++风格，推荐使用</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>结构体数组</h2>
+                <p>结构体数组就是数组的每个元素都是一个结构体变量。这在处理多个相同类型的数据时非常有用。</p>
+
+                <h3>结构体数组的定义和初始化</h3>
+                <div class="code-block">
+                    <pre>// 定义结构体数组
+Student class1[5];  // 包含5个学生的数组
+
+// 初始化结构体数组
+Student students[3] = {
+    {1001, "张三", 18, 85.5},
+    {1002, "李四", 19, 92.0},
+    {1003, "王五", 20, 78.5}
+};</pre>
+                </div>
+
+                <h3>访问结构体数组成员</h3>
+                <div class="code-block">
+                    <pre>// 访问第一个学生的姓名
+cout << students[0].name << endl;
+
+// 修改第二个学生的成绩
+students[1].score = 95.0;
+
+// 遍历结构体数组
+for(int i = 0; i < 3; i++) {
+    cout << "学号: " << students[i].id 
+         << ", 姓名: " << students[i].name 
+         << ", 成绩: " << students[i].score << endl;
+}</pre>
+                </div>
+
+                <div class="svg-container">
+                    <svg width="500" height="180" viewBox="0 0 500 180">
+                        <text x="250" y="30" text-anchor="middle" fill="#0277bd" font-size="18" font-weight="bold">结构体数组示意图</text>
+                        
+                        <rect x="50" y="50" width="80" height="100" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2"/>
+                        <text x="90" y="40" text-anchor="middle" fill="#01579b" font-size="14">students[0]</text>
+                        <rect x="55" y="55" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="90" y="68" text-anchor="middle" fill="#01579b" font-size="10">id: 1001</text>
+                        <rect x="55" y="80" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="90" y="93" text-anchor="middle" fill="#01579b" font-size="10">name: 张三</text>
+                        <rect x="55" y="105" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="90" y="118" text-anchor="middle" fill="#01579b" font-size="10">score: 85.5</text>
+                        
+                        <rect x="150" y="50" width="80" height="100" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2"/>
+                        <text x="190" y="40" text-anchor="middle" fill="#01579b" font-size="14">students[1]</text>
+                        <rect x="155" y="55" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="190" y="68" text-anchor="middle" fill="#01579b" font-size="10">id: 1002</text>
+                        <rect x="155" y="80" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="190" y="93" text-anchor="middle" fill="#01579b" font-size="10">name: 李四</text>
+                        <rect x="155" y="105" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="190" y="118" text-anchor="middle" fill="#01579b" font-size="10">score: 92.0</text>
+                        
+                        <rect x="250" y="50" width="80" height="100" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2"/>
+                        <text x="290" y="40" text-anchor="middle" fill="#01579b" font-size="14">students[2]</text>
+                        <rect x="255" y="55" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="290" y="68" text-anchor="middle" fill="#01579b" font-size="10">id: 1003</text>
+                        <rect x="255" y="80" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="290" y="93" text-anchor="middle" fill="#01579b" font-size="10">name: 王五</text>
+                        <rect x="255" y="105" width="70" height="20" fill="#b3e5fc" rx="3"/>
+                        <text x="290" y="118" text-anchor="middle" fill="#01579b" font-size="10">score: 78.5</text>
+                    </svg>
+                </div>
+            </section>
+
+            <section>
+                <h2>结构体指针</h2>
+                <p>结构体指针就是指向结构体变量的指针。通过结构体指针可以访问和操作结构体的成员。</p>
+
+                <h3>结构体指针的声明和使用</h3>
+                <div class="code-block">
+                    <pre>Student stu = {1001, "张三", 18, 85.5};
+Student *pStu = &stu;  // 定义指向结构体的指针
+
+// 通过指针访问结构体成员（使用->运算符）
+cout << "学号: " << pStu->id << endl;
+cout << "姓名: " << pStu->name << endl;
+
+// 等价于使用(*指针).成员的方式
+cout << "年龄: " << (*pStu).age << endl;</pre>
+                </div>
+
+                <h3>动态分配结构体内存</h3>
+                <div class="code-block">
+                    <pre>// 动态分配一个Student结构体
+Student *pStu = new Student;
+
+// 通过指针赋值
+pStu->id = 1001;
+pStu->name = "李四";
+pStu->age = 19;
+pStu->score = 90.5;
+
+// 使用完毕后释放内存
+delete pStu;</pre>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>普通变量</th>
+                            <th>指针变量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>访问成员</td>
+                            <td>结构体变量.成员名</td>
+                            <td>结构体指针->成员名</td>
+                        </tr>
+                        <tr>
+                            <td>示例</td>
+                            <td>stu.name</td>
+                            <td>pStu->name</td>
+                        </tr>
+                        <tr>
+                            <td>等价形式</td>
+                            <td>-</td>
+                            <td>(*pStu).name</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <strong>记忆技巧：</strong> 点(.)操作符用于结构体变量，箭头(->)操作符用于结构体指针。
+                </div>
+            </section>
+
+            <section>
+                <h2>综合示例</h2>
+                <p>下面是一个完整的使用结构体、结构体数组和结构体指针的示例程序：</p>
+
+                <div class="code-block">
+                    <pre>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// 定义学生结构体
+struct Student {
+    int id;
+    string name;
+    int age;
+    float score;
+};
+
+// 函数：打印学生信息
+void printStudent(const Student &stu) {
+    cout << "学号: " << stu.id 
+         << ", 姓名: " << stu.name 
+         << ", 年龄: " << stu.age 
+         << ", 成绩: " << stu.score << endl;
+}
+
+// 函数：通过指针修改学生成绩
+void updateScore(Student *pStu, float newScore) {
+    pStu->score = newScore;
+}
+
+int main() {
+    // 创建结构体数组
+    Student class1[3] = {
+        {1001, "张三", 18, 85.5},
+        {1002, "李四", 19, 92.0},
+        {1003, "王五", 20, 78.5}
+    };
+    
+    // 使用指针遍历数组
+    Student *p = class1;
+    cout << "=== 学生信息 ===" << endl;
+    for(int i = 0; i < 3; i++) {
+        printStudent(*(p + i));
+    }
+    
+    // 使用指针修改第二个学生的成绩
+    updateScore(&class1[1], 95.5);
+    
+    cout << "\n=== 修改后的学生信息 ===" << endl;
+    for(int i = 0; i < 3; i++) {
+        printStudent(class1[i]);
+    }
+    
+    // 动态创建结构体
+    Student *newStu = new Student{1004, "赵六", 21, 88.0};
+    cout << "\n=== 新学生信息 ===" << endl;
+    printStudent(*newStu);
+    
+    delete newStu;  // 释放内存
+    
+    return 0;
+}</pre>
+                </div>
+
+                <div class="svg-container">
+                    <svg width="450" height="250" viewBox="0 0 450 250">
+                        <text x="225" y="30" text-anchor="middle" fill="#0277bd" font-size="16" font-weight="bold">结构体在内存中的存储</text>
+                        
+                        <rect x="50" y="50" width="350" height="150" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="10"/>
+                        
+                        <rect x="70" y="70" width="80" height="110" fill="#e1bee7" stroke="#4a148c" stroke-width="1" rx="5"/>
+                        <text x="110" y="60" text-anchor="middle" fill="#4a148c" font-size="12">Student1</text>
+                        <rect x="75" y="75" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="110" y="86" text-anchor="middle" fill="#4a148c" font-size="8">id: 4字节</text>
+                        <rect x="75" y="95" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="110" y="106" text-anchor="middle" fill="#4a148c" font-size="8">name: 字符串</text>
+                        <rect x="75" y="115" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="110" y="126" text-anchor="middle" fill="#4a148c" font-size="8">age: 4字节</text>
+                        <rect x="75" y="135" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="110" y="146" text-anchor="middle" fill="#4a148c" font-size="8">score: 4字节</text>
+                        
+                        <rect x="170" y="70" width="80" height="110" fill="#e1bee7" stroke="#4a148c" stroke-width="1" rx="5"/>
+                        <text x="210" y="60" text-anchor="middle" fill="#4a148c" font-size="12">Student2</text>
+                        <rect x="175" y="75" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="210" y="86" text-anchor="middle" fill="#4a148c" font-size="8">id: 4字节</text>
+                        <rect x="175" y="95" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="210" y="106" text-anchor="middle" fill="#4a148c" font-size="8">name: 字符串</text>
+                        <rect x="175" y="115" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="210" y="126" text-anchor="middle" fill="#4a148c" font-size="8">age: 4字节</text>
+                        <rect x="175" y="135" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="210" y="146" text-anchor="middle" fill="#4a148c" font-size="8">score: 4字节</text>
+                        
+                        <rect x="270" y="70" width="80" height="110" fill="#e1bee7" stroke="#4a148c" stroke-width="1" rx="5"/>
+                        <text x="310" y="60" text-anchor="middle" fill="#4a148c" font-size="12">Student3</text>
+                        <rect x="275" y="75" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="310" y="86" text-anchor="middle" fill="#4a148c" font-size="8">id: 4字节</text>
+                        <rect x="275" y="95" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="310" y="106" text-anchor="middle" fill="#4a148c" font-size="8">name: 字符串</text>
+                        <rect x="275" y="115" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="310" y="126" text-anchor="middle" fill="#4a148c" font-size="8">age: 4字节</text>
+                        <rect x="275" y="135" width="70" height="15" fill="#f3e5f5" rx="2"/>
+                        <text x="310" y="146" text-anchor="middle" fill="#4a148c" font-size="8">score: 4字节</text>
+                        
+                        <text x="225" y="200" text-anchor="middle" fill="#7b1fa2" font-size="10">结构体数组在内存中连续存储</text>
+                    </svg>
+                </div>
+            </section>
+
+            <section>
+                <h2>结构体使用要点总结</h2>
+                <ul>
+                    <li><strong>定义结构体</strong>：使用struct关键字，注意末尾分号</li>
+                    <li><strong>访问成员</strong>：使用点(.)操作符访问结构体变量成员，使用箭头(->)操作符访问结构体指针成员</li>
+                    <li><strong>结构体数组</strong>：适合存储多个相同类型的结构体数据</li>
+                    <li><strong>结构体指针</strong>：可以指向结构体变量，用于动态内存分配和函数参数传递</li>
+                    <li><strong>内存管理</strong>：动态分配的结构体需要使用delete释放内存</li>
+                    <li><strong>初始化</strong>：可以使用多种方式初始化结构体，推荐使用C++11的统一初始化语法</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>最佳实践：</strong> 
+                    <ul>
+                        <li>给结构体起一个有意义的名称</li>
+                        <li>结构体成员变量命名要清晰明了</li>
+                        <li>对于大型结构体，使用指针传递避免拷贝开销</li>
+                        <li>使用const引用作为函数参数，防止意外修改</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            蓝海资料掘金营 © 2023 - C++从入门到精通
+        </footer>
+    </div>
+</body>
+</html>

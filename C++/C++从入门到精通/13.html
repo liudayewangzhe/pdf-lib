@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++从入门到精通 - 类和对象</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 50%, #f8bbd0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(45deg, #42a5f5, #7e57c2);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #ff9800;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .chapter-number {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #42a5f5;
+        }
+
+        h2 {
+            color: #7e57c2;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #bbdefb;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #42a5f5;
+            margin: 25px 0 15px;
+            font-size: 1.4em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #7e57c2;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1f5fe;
+        }
+
+        tr:nth-child(even) {
+            background: #f3e5f5;
+        }
+
+        tr:hover {
+            background: #e1f5fe;
+        }
+
+        .code-block {
+            background: #263238;
+            color: #eeffff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #ff9800;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffeb3b 0%, #ffeb3b 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 0.3em;
+            background-position: 0 88%;
+            font-weight: bold;
+        }
+
+        .example-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        footer {
+            background: linear-gradient(45deg, #7e57c2, #42a5f5);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 40px;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border-top: 5px solid #ff9800;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .concept-card h3 {
+            color: #7e57c2;
+            margin-top: 0;
+        }
+
+        .key-point {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++从入门到精通</h1>
+            <div class="subtitle">掌握面向对象编程的核心概念</div>
+            <div class="chapter-number">第13章：类和对象</div>
+        </header>
+
+        <div class="content">
+            <section>
+                <h2>类和对象简介</h2>
+                <p>在C++中，<span class="highlight">类</span>是面向对象编程的核心概念，它是一种用户自定义的数据类型，用于封装数据和对数据的操作。<span class="highlight">对象</span>是类的实例，通过对象我们可以访问类中定义的成员变量和成员函数。</p>
+                
+                <div class="svg-container">
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="50" width="200" height="100" fill="#bbdefb" stroke="#42a5f5" stroke-width="3" rx="10"/>
+                        <text x="150" y="80" text-anchor="middle" fill="#7e57c2" font-size="18" font-weight="bold">类 (Class)</text>
+                        <text x="150" y="105" text-anchor="middle" fill="#333" font-size="14">数据成员 + 成员函数</text>
+                        <text x="150" y="125" text-anchor="middle" fill="#333" font-size="14">蓝图/模板</text>
+                        
+                        <path d="M250 100 L350 100" stroke="#ff9800" stroke-width="3" marker-end="url(#arrow)"/>
+                        
+                        <rect x="350" y="50" width="200" height="100" fill="#c8e6c9" stroke="#4caf50" stroke-width="3" rx="10"/>
+                        <text x="450" y="80" text-anchor="middle" fill="#7e57c2" font-size="18" font-weight="bold">对象 (Object)</text>
+                        <text x="450" y="105" text-anchor="middle" fill="#333" font-size="14">类的具体实例</text>
+                        <text x="450" y="125" text-anchor="middle" fill="#333" font-size="14">具有实际数据</text>
+                        
+                        <defs>
+                            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#ff9800"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <div class="key-point">
+                    <p><strong>关键点：</strong> 类就像建筑物的蓝图，而对象则是根据这个蓝图建造的实际建筑物。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2>类定义</h2>
+                <p>在C++中，我们使用<span class="highlight">class</span>关键字来定义一个类。类定义包括数据成员（属性）和成员函数（方法）。</p>
+                
+                <h3>类定义的基本语法</h3>
+                <div class="code-block">
+                    <pre><code>class 类名 {
+访问修饰符:
+    // 数据成员（属性）
+    数据类型 成员变量1;
+    数据类型 成员变量2;
+    ...
+    
+    // 成员函数（方法）
+    返回类型 函数名1(参数列表);
+    返回类型 函数名2(参数列表);
+    ...
+};</code></pre>
+                </div>
+                
+                <div class="example-box">
+                    <h3>示例：定义一个学生类</h3>
+                    <div class="code-block">
+                        <pre><code>class Student {
+private:
+    string name;
+    int age;
+    double score;
+    
+public:
+    // 成员函数声明
+    void setName(string n);
+    void setAge(int a);
+    void setScore(double s);
+    void displayInfo();
+};</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>对象创建</h2>
+                <p>定义了类之后，我们可以创建该类的对象。对象是类的实例，每个对象都有自己的数据成员副本。</p>
+                
+                <h3>创建对象的方法</h3>
+                <ul>
+                    <li><strong>栈上创建：</strong> 类名 对象名;</li>
+                    <li><strong>堆上创建：</strong> 类名 *对象指针 = new 类名();</li>
+                </ul>
+                
+                <div class="example-box">
+                    <h3>示例：创建学生对象</h3>
+                    <div class="code-block">
+                        <pre><code>// 在栈上创建对象
+Student stu1;
+Student stu2;
+
+// 在堆上创建对象
+Student *pStu = new Student();
+
+// 使用对象
+stu1.setName("张三");
+stu1.setAge(18);
+stu1.setScore(95.5);
+stu1.displayInfo();
+
+// 使用指针访问对象
+pStu->setName("李四");
+pStu->setAge(19);
+pStu->setScore(88.5);
+pStu->displayInfo();
+
+// 释放堆内存
+delete pStu;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>成员函数</h2>
+                <p>成员函数是定义在类内部的函数，用于操作类的数据成员。成员函数可以在类内部定义，也可以在类外部定义。</p>
+                
+                <h3>成员函数的定义方式</h3>
+                <table>
+                    <tr>
+                        <th>定义方式</th>
+                        <th>语法</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>类内定义</td>
+                        <td>在类声明内部直接定义函数</td>
+                        <td>自动成为内联函数，适合简单函数</td>
+                    </tr>
+                    <tr>
+                        <td>类外定义</td>
+                        <td>在类声明外部使用作用域解析运算符::定义</td>
+                        <td>适合复杂函数，使类声明更清晰</td>
+                    </tr>
+                </table>
+                
+                <div class="example-box">
+                    <h3>示例：成员函数的定义</h3>
+                    <div class="code-block">
+                        <pre><code>class Student {
+private:
+    string name;
+    int age;
+    double score;
+    
+public:
+    // 类内定义的成员函数（自动内联）
+    void setName(string n) {
+        name = n;
+    }
+    
+    void setAge(int a) {
+        age = a;
+    }
+    
+    // 类外定义的成员函数声明
+    void setScore(double s);
+    void displayInfo();
+};
+
+// 类外定义的成员函数
+void Student::setScore(double s) {
+    score = s;
+}
+
+void Student::displayInfo() {
+    cout << "姓名：" << name << endl;
+    cout << "年龄：" << age << endl;
+    cout << "成绩：" << score << endl;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>访问控制</h2>
+                <p>C++提供了三种访问修饰符来控制类成员的访问权限：<span class="highlight">public</span>、<span class="highlight">private</span>和<span class="highlight">protected</span>。</p>
+                
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>public（公有）</h3>
+                        <p>公有成员在类的外部可以直接访问，通常用于定义类的接口。</p>
+                        <ul>
+                            <li>任何地方都可以访问</li>
+                            <li>通常用于成员函数</li>
+                            <li>提供类的公共接口</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>private（私有）</h3>
+                        <p>私有成员只能在类的内部访问，通常用于封装数据。</p>
+                        <ul>
+                            <li>只能在类内部访问</li>
+                            <li>通常用于数据成员</li>
+                            <li>实现数据隐藏</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>protected（保护）</h3>
+                        <p>保护成员在类的内部和派生类中可以访问，但在类的外部不能访问。</p>
+                        <ul>
+                            <li>类内部和派生类中可访问</li>
+                            <li>类外部不可访问</li>
+                            <li>用于继承关系</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="svg-container">
+                    <svg width="600" height="300" viewBox="0 0 600 300">
+                        <rect x="50" y="50" width="500" height="200" fill="#f5f5f5" stroke="#ccc" stroke-width="2" rx="10"/>
+                        
+                        <rect x="70" y="80" width="150" height="40" fill="#c8e6c9" stroke="#4caf50" stroke-width="2" rx="5"/>
+                        <text x="145" y="105" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">public成员</text>
+                        <text x="145" y="125" text-anchor="middle" fill="#666" font-size="12">类内外均可访问</text>
+                        
+                        <rect x="70" y="140" width="150" height="40" fill="#ffecb3" stroke="#ffc107" stroke-width="2" rx="5"/>
+                        <text x="145" y="165" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">protected成员</text>
+                        <text x="145" y="185" text-anchor="middle" fill="#666" font-size="12">类内和派生类访问</text>
+                        
+                        <rect x="70" y="200" width="150" height="40" fill="#ffcdd2" stroke="#f44336" stroke-width="2" rx="5"/>
+                        <text x="145" y="225" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">private成员</text>
+                        <text x="145" y="245" text-anchor="middle" fill="#666" font-size="12">仅类内访问</text>
+                        
+                        <rect x="280" y="80" width="250" height="160" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="10"/>
+                        <text x="405" y="100" text-anchor="middle" fill="#333" font-size="16" font-weight="bold">类的外部</text>
+                        
+                        <path d="M220 100 L280 100" stroke="#42a5f5" stroke-width="2" marker-end="url(#arrow2)"/>
+                        <text x="250" y="95" text-anchor="middle" fill="#666" font-size="12">可访问</text>
+                        
+                        <path d="M220 180 L280 180" stroke="#ff9800" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="250" y="175" text-anchor="middle" fill="#666" font-size="12">不可访问</text>
+                        
+                        <path d="M220 240 L280 240" stroke="#ff9800" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="250" y="235" text-anchor="middle" fill="#666" font-size="12">不可访问</text>
+                        
+                        <defs>
+                            <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#42a5f5"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <div class="example-box">
+                    <h3>示例：访问控制的实际应用</h3>
+                    <div class="code-block">
+                        <pre><code>class BankAccount {
+private:
+    string accountNumber;  // 私有：外部不能直接访问
+    double balance;        // 私有：外部不能直接访问
+    
+public:
+    // 公有：外部可以访问的接口
+    void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+    
+    bool withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+    
+    double getBalance() {
+        return balance;  // 通过公有函数访问私有数据
+    }
+};
+
+// 使用示例
+BankAccount account;
+account.deposit(1000);      // 正确：公有函数可以调用
+// account.balance = 5000;  // 错误：私有成员不能直接访问
+double currentBalance = account.getBalance();  // 正确：通过公有接口访问</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>综合示例</h2>
+                <p>下面是一个完整的学生类示例，展示了类定义、对象创建、成员函数和访问控制的综合应用。</p>
+                
+                <div class="code-block">
+                    <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Student {
+private:
+    string name;
+    int age;
+    double score;
+    
+public:
+    // 设置学生信息
+    void setInfo(string n, int a, double s) {
+        name = n;
+        age = a;
+        score = s;
+    }
+    
+    // 获取学生姓名
+    string getName() {
+        return name;
+    }
+    
+    // 获取学生年龄
+    int getAge() {
+        return age;
+    }
+    
+    // 获取学生成绩
+    double getScore() {
+        return score;
+    }
+    
+    // 显示学生信息
+    void displayInfo() {
+        cout << "=== 学生信息 ===" << endl;
+        cout << "姓名: " << name << endl;
+        cout << "年龄: " << age << endl;
+        cout << "成绩: " << score << endl;
+        cout << "===============" << endl;
+    }
+    
+    // 判断是否优秀（成绩 >= 90）
+    bool isExcellent() {
+        return score >= 90;
+    }
+};
+
+int main() {
+    // 创建学生对象
+    Student stu1, stu2;
+    
+    // 设置学生信息
+    stu1.setInfo("张三", 18, 95.5);
+    stu2.setInfo("李四", 19, 85.0);
+    
+    // 显示学生信息
+    stu1.displayInfo();
+    stu2.displayInfo();
+    
+    // 判断是否优秀
+    if (stu1.isExcellent()) {
+        cout << stu1.getName() << "是优秀学生！" << endl;
+    }
+    
+    if (stu2.isExcellent()) {
+        cout << stu2.getName() << "是优秀学生！" << endl;
+    } else {
+        cout << stu2.getName() << "需要继续努力！" << endl;
+    }
+    
+    return 0;
+}</code></pre>
+                </div>
+            </section>
+
+            <section>
+                <h2>本章总结</h2>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>类定义</h3>
+                        <ul>
+                            <li>使用class关键字定义类</li>
+                            <li>包含数据成员和成员函数</li>
+                            <li>是对象的蓝图</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>对象创建</h3>
+                        <ul>
+                            <li>对象是类的实例</li>
+                            <li>可以在栈或堆上创建</li>
+                            <li>每个对象有独立的数据</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>成员函数</h3>
+                        <ul>
+                            <li>操作类的数据成员</li>
+                            <li>可以在类内或类外定义</li>
+                            <li>使用作用域解析运算符::</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>访问控制</h3>
+                        <ul>
+                            <li>public：类内外均可访问</li>
+                            <li>private：仅类内访问</li>
+                            <li>protected：类内和派生类访问</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h3>学习建议</h3>
+                    <p>1. 理解类和对象的关系：类就像蓝图，对象是具体的实例</p>
+                    <p>2. 掌握访问控制的重要性：合理使用public、private实现封装</p>
+                    <p>3. 多练习：通过实际编程加深对面向对象概念的理解</p>
+                    <p>4. 思考设计：考虑哪些成员应该是public，哪些应该是private</p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++多态详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #0288d1;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        .nav {
+            background: #0288d1;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4fc3f7;
+        }
+        
+        h2 {
+            color: #0288d1;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #b3e5fc;
+        }
+        
+        h3 {
+            color: #0097a7;
+            margin: 25px 0 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .highlight {
+            background: #e1f5fe;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #4fc3f7;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        tr:hover {
+            background: #e1f5fe;
+        }
+        
+        .code-block {
+            background: #263238;
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .code-keyword {
+            color: #ff9800;
+        }
+        
+        .code-class {
+            color: #4fc3f7;
+        }
+        
+        .code-function {
+            color: #c3e88d;
+        }
+        
+        .code-comment {
+            color: #78909c;
+        }
+        
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .comparison-box {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comparison-box h4 {
+            color: #0288d1;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            background: #0288d1;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            font-size: 1.1em;
+            border-top: 5px solid #4fc3f7;
+        }
+        
+        .example-box {
+            background: #f1f8e9;
+            border-left: 4px solid #8bc34a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++ 多态详解</h1>
+            <p class="subtitle">虚函数、纯虚函数、抽象类与动态绑定</p>
+        </header>
+        
+        <nav class="nav">
+            <a href="#intro">多态简介</a>
+            <a href="#virtual">虚函数</a>
+            <a href="#pure-virtual">纯虚函数</a>
+            <a href="#abstract">抽象类</a>
+            <a href="#dynamic">动态绑定</a>
+            <a href="#example">综合示例</a>
+        </nav>
+        
+        <div class="content">
+            <section id="intro" class="section">
+                <h2>多态简介</h2>
+                <p>多态是面向对象编程的三大特性之一（封装、继承、多态），它允许我们使用统一的接口来处理不同类型的对象。在C++中，多态主要通过虚函数实现。</p>
+                
+                <div class="highlight">
+                    <p><strong>多态的类型：</strong></p>
+                    <ul>
+                        <li><strong>编译时多态（静态绑定）：</strong> 通过函数重载和运算符重载实现</li>
+                        <li><strong>运行时多态（动态绑定）：</strong> 通过虚函数和继承实现</li>
+                    </ul>
+                </div>
+                
+                <div class="diagram-container">
+                    <svg width="500" height="200" viewBox="0 0 500 200">
+                        <rect x="50" y="50" width="400" height="100" rx="10" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2"/>
+                        <text x="250" y="80" text-anchor="middle" font-size="18" font-weight="bold" fill="#0288d1">C++ 多态</text>
+                        <line x1="150" y1="100" x2="150" y2="130" stroke="#4fc3f7" stroke-width="2"/>
+                        <line x1="350" y1="100" x2="350" y2="130" stroke="#4fc3f7" stroke-width="2"/>
+                        <rect x="100" y="130" width="100" height="40" rx="5" fill="#b3e5fc" stroke="#0288d1" stroke-width="1"/>
+                        <rect x="300" y="130" width="100" height="40" rx="5" fill="#b3e5fc" stroke="#0288d1" stroke-width="1"/>
+                        <text x="150" y="155" text-anchor="middle" font-size="14" fill="#01579b">编译时多态</text>
+                        <text x="350" y="155" text-anchor="middle" font-size="14" fill="#01579b">运行时多态</text>
+                    </svg>
+                </div>
+            </section>
+            
+            <section id="virtual" class="section">
+                <h2>虚函数</h2>
+                <p>虚函数是在基类中使用 <span class="code-keyword">virtual</span> 关键字声明的成员函数，它可以在派生类中被重新定义。当通过基类指针或引用调用虚函数时，会根据实际对象的类型调用相应的函数。</p>
+                
+                <h3>虚函数的特点</h3>
+                <ul>
+                    <li>使用 <span class="code-keyword">virtual</span> 关键字声明</li>
+                    <li>在派生类中可以重写（override）</li>
+                    <li>通过基类指针或引用调用时，实现动态绑定</li>
+                    <li>虚函数可以有函数体</li>
+                </ul>
+                
+                <div class="code-block">
+                    <pre><span class="code-comment">// 虚函数示例</span>
+<span class="code-keyword">class</span> <span class="code-class">Animal</span> {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">virtual</span> <span class="code-keyword">void</span> <span class="code-function">speak</span>() {
+        cout << <span class="code-string">"动物发出声音"</span> << endl;
+    }
+};
+
+<span class="code-keyword">class</span> <span class="code-class">Dog</span> : <span class="code-keyword">public</span> Animal {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-function">speak</span>() <span class="code-keyword">override</span> {
+        cout << <span class="code-string">"汪汪！"</span> << endl;
+    }
+};
+
+<span class="code-keyword">class</span> <span class="code-class">Cat</span> : <span class="code-keyword">public</span> Animal {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-function">speak</span>() <span class="code-keyword">override</span> {
+        cout << <span class="code-string">"喵喵！"</span> << endl;
+    }
+};</pre>
+                </div>
+            </section>
+            
+            <section id="pure-virtual" class="section">
+                <h2>纯虚函数</h2>
+                <p>纯虚函数是在基类中声明但没有定义的虚函数，通过在函数声明后添加 <span class="code-keyword">= 0</span> 来标识。包含纯虚函数的类成为抽象类，不能实例化。</p>
+                
+                <h3>纯虚函数的特点</h3>
+                <ul>
+                    <li>使用 <span class="code-keyword">virtual</span> 关键字和 <span class="code-keyword">= 0</span> 声明</li>
+                    <li>没有函数体</li>
+                    <li>必须在派生类中被重写（除非派生类也是抽象类）</li>
+                    <li>使类成为抽象类</li>
+                </ul>
+                
+                <div class="code-block">
+                    <pre><span class="code-comment">// 纯虚函数示例</span>
+<span class="code-keyword">class</span> <span class="code-class">Shape</span> {
+<span class="code-keyword">public</span>:
+    <span class="code-comment">// 纯虚函数</span>
+    <span class="code-keyword">virtual</span> <span class="code-keyword">double</span> <span class="code-function">area</span>() <span class="code-keyword">const</span> = <span class="code-number">0</span>;
+    <span class="code-keyword">virtual</span> <span class="code-keyword">double</span> <span class="code-function">perimeter</span>() <span class="code-keyword">const</span> = <span class="code-number">0</span>;
+    
+    <span class="code-comment">// 虚析构函数</span>
+    <span class="code-keyword">virtual</span> ~<span class="code-function">Shape</span>() {}
+};
+
+<span class="code-keyword">class</span> <span class="code-class">Circle</span> : <span class="code-keyword">public</span> Shape {
+<span class="code-keyword">private</span>:
+    <span class="code-keyword">double</span> radius;
+    
+<span class="code-keyword">public</span>:
+    <span class="code-function">Circle</span>(<span class="code-keyword">double</span> r) : <span class="code-function">radius</span>(r) {}
+    
+    <span class="code-keyword">double</span> <span class="code-function">area</span>() <span class="code-keyword">const</span> <span class="code-keyword">override</span> {
+        <span class="code-keyword">return</span> 3.14159 * radius * radius;
+    }
+    
+    <span class="code-keyword">double</span> <span class="code-function">perimeter</span>() <span class="code-keyword">const</span> <span class="code-keyword">override</span> {
+        <span class="code-keyword">return</span> 2 * 3.14159 * radius;
+    }
+};</pre>
+                </div>
+            </section>
+            
+            <section id="abstract" class="section">
+                <h2>抽象类</h2>
+                <p>抽象类是包含至少一个纯虚函数的类。抽象类不能被实例化，只能作为基类被继承。它的主要作用是为派生类提供统一的接口。</p>
+                
+                <h3>抽象类的特点</h3>
+                <ul>
+                    <li>包含至少一个纯虚函数</li>
+                    <li>不能创建对象实例</li>
+                    <li>可以包含数据成员和普通成员函数</li>
+                    <li>派生类必须重写所有纯虚函数才能实例化</li>
+                </ul>
+                
+                <div class="comparison">
+                    <div class="comparison-box">
+                        <h4>抽象类示例</h4>
+                        <div class="code-block">
+                            <pre><span class="code-keyword">class</span> <span class="code-class">Vehicle</span> {
+<span class="code-keyword">public</span>:
+    <span class="code-comment">// 纯虚函数</span>
+    <span class="code-keyword">virtual</span> <span class="code-keyword">void</span> <span class="code-function">start</span>() = <span class="code-number">0</span>;
+    <span class="code-keyword">virtual</span> <span class="code-keyword">void</span> <span class="code-function">stop</span>() = <span class="code-number">0</span>;
+    
+    <span class="code-comment">// 普通成员函数</span>
+    <span class="code-keyword">void</span> <span class="code-function">honk</span>() {
+        cout << <span class="code-string">"嘟嘟！"</span> << endl;
+    }
+};</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-box">
+                        <h4>具体类示例</h4>
+                        <div class="code-block">
+                            <pre><span class="code-keyword">class</span> <span class="code-class">Car</span> : <span class="code-keyword">public</span> Vehicle {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-function">start</span>() <span class="code-keyword">override</span> {
+        cout << <span class="code-string">"汽车启动"</span> << endl;
+    }
+    
+    <span class="code-keyword">void</span> <span class="code-function">stop</span>() <span class="code-keyword">override</span> {
+        cout << <span class="code-string">"汽车停止"</span> << endl;
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="dynamic" class="section">
+                <h2>动态绑定</h2>
+                <p>动态绑定（也称为后期绑定或运行时绑定）是指在程序运行时根据对象的实际类型来确定调用哪个函数。这是通过虚函数表（vtable）实现的。</p>
+                
+                <h3>动态绑定的工作原理</h3>
+                <ol>
+                    <li>每个包含虚函数的类都有一个虚函数表（vtable）</li>
+                    <li>vtable中存储了指向类虚函数的指针</li>
+                    <li>每个对象包含一个指向vtable的指针（vptr）</li>
+                    <li>调用虚函数时，通过vptr找到vtable，然后调用相应的函数</li>
+                </ol>
+                
+                <div class="diagram-container">
+                    <svg width="600" height="300" viewBox="0 0 600 300">
+                        <rect x="50" y="50" width="200" height="60" rx="5" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2"/>
+                        <text x="150" y="80" text-anchor="middle" font-size="14" fill="#0288d1">BaseClass 对象</text>
+                        <rect x="70" y="100" width="160" height="40" rx="3" fill="#b3e5fc" stroke="#0288d1" stroke-width="1"/>
+                        <text x="150" y="125" text-anchor="middle" font-size="12" fill="#01579b">vptr →</text>
+                        
+                        <rect x="350" y="50" width="200" height="180" rx="5" fill="#f3e5f5" stroke="#ab47bc" stroke-width="2"/>
+                        <text x="450" y="75" text-anchor="middle" font-size="14" fill="#7b1fa2">虚函数表 (vtable)</text>
+                        <rect x="370" y="90" width="160" height="30" rx="3" fill="#e1bee7" stroke="#8e24aa" stroke-width="1"/>
+                        <text x="450" y="110" text-anchor="middle" font-size="12" fill="#4a148c">BaseClass::func1()</text>
+                        <rect x="370" y="125" width="160" height="30" rx="3" fill="#e1bee7" stroke="#8e24aa" stroke-width="1"/>
+                        <text x="450" y="145" text-anchor="middle" font-size="12" fill="#4a148c">BaseClass::func2()</text>
+                        <rect x="370" y="160" width="160" height="30" rx="3" fill="#e1bee7" stroke="#8e24aa" stroke-width="1"/>
+                        <text x="450" y="180" text-anchor="middle" font-size="12" fill="#4a148c">BaseClass::func3()</text>
+                        
+                        <line x1="230" y1="120" x2="350" y2="105" stroke="#4fc3f7" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4fc3f7"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <div class="example-box">
+                    <h4>动态绑定示例</h4>
+                    <div class="code-block">
+                        <pre><span class="code-comment">// 动态绑定示例</span>
+Animal* animal1 = <span class="code-keyword">new</span> <span class="code-function">Dog</span>();
+Animal* animal2 = <span class="code-keyword">new</span> <span class="code-function">Cat</span>();
+
+animal1-><span class="code-function">speak</span>();  <span class="code-comment">// 输出: 汪汪！</span>
+animal2-><span class="code-function">speak</span>();  <span class="code-comment">// 输出: 喵喵！</span>
+
+<span class="code-comment">// 释放内存</span>
+<span class="code-keyword">delete</span> animal1;
+<span class="code-keyword">delete</span> animal2;</pre>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="example" class="section">
+                <h2>综合示例</h2>
+                <p>下面是一个完整的示例，展示了多态在实际编程中的应用：</p>
+                
+                <div class="code-block">
+                    <pre><span class="code-comment">// 多态综合示例</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;iostream&gt;</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;vector&gt;</span>
+<span class="code-keyword">using</span> <span class="code-keyword">namespace</span> std;
+
+<span class="code-comment">// 抽象基类</span>
+<span class="code-keyword">class</span> <span class="code-class">Employee</span> {
+<span class="code-keyword">protected</span>:
+    string name;
+    <span class="code-keyword">double</span> salary;
+    
+<span class="code-keyword">public</span>:
+    <span class="code-function">Employee</span>(<span class="code-keyword">const</span> string& n, <span class="code-keyword">double</span> s) : <span class="code-function">name</span>(n), <span class="code-function">salary</span>(s) {}
+    
+    <span class="code-comment">// 纯虚函数</span>
+    <span class="code-keyword">virtual</span> <span class="code-keyword">double</span> <span class="code-function">calculateBonus</span>() <span class="code-keyword">const</span> = <span class="code-number">0</span>;
+    
+    <span class="code-comment">// 虚函数</span>
+    <span class="code-keyword">virtual</span> <span class="code-keyword">void</span> <span class="code-function">displayInfo</span>() <span class="code-keyword">const</span> {
+        cout << <span class="code-string">"姓名: "</span> << name << <span class="code-string">", 基本工资: "</span> << salary;
+    }
+    
+    <span class="code-keyword">virtual</span> ~<span class="code-function">Employee</span>() {}
+};
+
+<span class="code-comment">// 派生类 - 经理</span>
+<span class="code-keyword">class</span> <span class="code-class">Manager</span> : <span class="code-keyword">public</span> Employee {
+<span class="code-keyword">private</span>:
+    <span class="code-keyword">double</span> bonusRate;
+    
+<span class="code-keyword">public</span>:
+    <span class="code-function">Manager</span>(<span class="code-keyword">const</span> string& n, <span class="code-keyword">double</span> s, <span class="code-keyword">double</span> br) 
+        : <span class="code-function">Employee</span>(n, s), <span class="code-function">bonusRate</span>(br) {}
+    
+    <span class="code-keyword">double</span> <span class="code-function">calculateBonus</span>() <span class="code-keyword">const</span> <span class="code-keyword">override</span> {
+        <span class="code-keyword">return</span> salary * bonusRate;
+    }
+    
+    <span class="code-keyword">void</span> <span class="code-function">displayInfo</span>() <span class="code-keyword">const</span> <span class="code-keyword">override</span> {
+        Employee::<span class="code-function">displayInfo</span>();
+        cout << <span class="code-string">", 职位: 经理, 奖金: "</span> << <span class="code-function">calculateBonus</span>() << endl;
+    }
+};
+
+<span class="code-comment">// 派生类 - 开发人员</span>
+<span class="code-keyword">class</span> <span class="code-class">Developer</span> : <span class="code-keyword">public</span> Employee {
+<span class="code-keyword">private</span>:
+    <span class="code-keyword">int</span> overtimeHours;
+    <span class="code-keyword">double</span> overtimeRate;
+    
+<span class="code-keyword">public</span>:
+    <span class="code-function">Developer</span>(<span class="code-keyword">const</span> string& n, <span class="code-keyword">double</span> s, <span class="code-keyword">int</span> oh, <span class="code-keyword">double</span> or) 
+        : <span class="code-function">Employee</span>(n, s), <span class="code-function">overtimeHours</span>(oh), <span class="code-function">overtimeRate</span>(or) {}
+    
+    <span class="code-keyword">double</span> <span class="code-function">calculateBonus</span>() <span class="code-keyword">const</span> <span class="code-keyword">override</span> {
+        <span class="code-keyword">return</span> overtimeHours * overtimeRate;
+    }
+    
+    <span class="code-keyword">void</span> <span class="code-function">displayInfo</span>() <span class="code-keyword">const</span> <span class="code-keyword">override</span> {
+        Employee::<span class="code-function">displayInfo</span>();
+        cout << <span class="code-string">", 职位: 开发人员, 奖金: "</span> << <span class="code-function">calculateBonus</span>() << endl;
+    }
+};
+
+<span class="code-keyword">int</span> <span class="code-function">main</span>() {
+    vector&lt;Employee*&gt; employees;
+    
+    employees.<span class="code-function">push_back</span>(<span class="code-keyword">new</span> <span class="code-function">Manager</span>(<span class="code-string">"张三"</span>, 10000, 0.2));
+    employees.<span class="code-function">push_back</span>(<span class="code-keyword">new</span> <span class="code-function">Developer</span>(<span class="code-string">"李四"</span>, 8000, 10, 100));
+    employees.<span class="code-function">push_back</span>(<span class="code-keyword">new</span> <span class="code-function">Manager</span>(<span class="code-string">"王五"</span>, 12000, 0.25));
+    employees.<span class="code-function">push_back</span>(<span class="code-keyword">new</span> <span class="code-function">Developer</span>(<span class="code-string">"赵六"</span>, 9000, 15, 100));
+    
+    <span class="code-comment">// 使用多态处理不同类型的员工</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-keyword">auto</span>& emp : employees) {
+        emp-><span class="code-function">displayInfo</span>();
+    }
+    
+    <span class="code-comment">// 释放内存</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">auto</span> emp : employees) {
+        <span class="code-keyword">delete</span> emp;
+    }
+    
+    <span class="code-keyword">return</span> <span class="code-number">0</span>;
+}</pre>
+                </div>
+                
+                <div class="highlight">
+                    <p><strong>示例输出：</strong></p>
+                    <pre>姓名: 张三, 基本工资: 10000, 职位: 经理, 奖金: 2000
+姓名: 李四, 基本工资: 8000, 职位: 开发人员, 奖金: 1000
+姓名: 王五, 基本工资: 12000, 职位: 经理, 奖金: 3000
+姓名: 赵六, 基本工资: 9000, 职位: 开发人员, 奖金: 1500</pre>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>总结</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>概念</th>
+                            <th>关键字</th>
+                            <th>特点</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>虚函数</td>
+                            <td>virtual</td>
+                            <td>可以重写，有函数体</td>
+                            <td>实现运行时多态</td>
+                        </tr>
+                        <tr>
+                            <td>纯虚函数</td>
+                            <td>virtual ... = 0</td>
+                            <td>必须重写，无函数体</td>
+                            <td>定义接口规范</td>
+                        </tr>
+                        <tr>
+                            <td>抽象类</td>
+                            <td>包含纯虚函数</td>
+                            <td>不能实例化</td>
+                            <td>作为基类提供统一接口</td>
+                        </tr>
+                        <tr>
+                            <td>动态绑定</td>
+                            <td>通过虚函数实现</td>
+                            <td>运行时确定函数调用</td>
+                            <td>提高代码灵活性和可扩展性</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="highlight">
+                    <p><strong>多态的优势：</strong></p>
+                    <ul>
+                        <li><strong>代码复用：</strong> 通过继承复用基类代码</li>
+                        <li><strong>接口统一：</strong> 使用基类指针处理不同派生类对象</li>
+                        <li><strong>可扩展性：</strong> 添加新类不影响现有代码</li>
+                        <li><strong>灵活性：</strong> 运行时决定调用哪个函数</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>蓝海资料掘金营 © 2023 - C++从入门到精通课程</p>
+        </footer>
+    </div>
+</body>
+</html>

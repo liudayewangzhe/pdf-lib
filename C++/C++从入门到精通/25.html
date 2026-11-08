@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++预处理器详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #f3e5f5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(45deg, #42a5f5, #7e57c2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 5px solid #ff9800;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #42a5f5;
+        }
+        
+        h2 {
+            color: #7e57c2;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #ffb74d;
+        }
+        
+        h3 {
+            color: #42a5f5;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        th {
+            background: linear-gradient(45deg, #42a5f5, #7e57c2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        pre {
+            background: #263238;
+            color: #eeffff;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #ff9800;
+        }
+        
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .note {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .warning {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(45deg, #42a5f5, #7e57c2);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+        
+        .example-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px dashed #42a5f5;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a5d6a7 0%, #a5d6a7 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 90%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++预处理器详解</h1>
+            <p class="subtitle">宏定义、条件编译与头文件保护</p>
+        </header>
+        
+        <div class="content">
+            <section>
+                <h2>预处理器概述</h2>
+                <p>C++预处理器是编译过程中的第一个阶段，它在实际编译之前对源代码进行文本处理。预处理器指令以<code>#</code>开头，常见的预处理器功能包括宏定义、条件编译和头文件包含等。</p>
+                
+                <div class="svg-container">
+                    <svg width="600" height="120" viewBox="0 0 600 120">
+                        <rect x="10" y="40" width="120" height="40" rx="10" fill="#42a5f5" stroke="#1565c0" stroke-width="2"/>
+                        <text x="70" y="65" text-anchor="middle" fill="white" font-weight="bold">源代码</text>
+                        
+                        <rect x="160" y="40" width="120" height="40" rx="10" fill="#7e57c2" stroke="#4527a0" stroke-width="2"/>
+                        <text x="220" y="65" text-anchor="middle" fill="white" font-weight="bold">预处理器</text>
+                        
+                        <rect x="310" y="40" width="120" height="40" rx="10" fill="#66bb6a" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="370" y="65" text-anchor="middle" fill="white" font-weight="bold">编译器</text>
+                        
+                        <rect x="460" y="40" width="120" height="40" rx="10" fill="#ffa726" stroke="#ef6c00" stroke-width="2"/>
+                        <text x="520" y="65" text-anchor="middle" fill="white" font-weight="bold">目标代码</text>
+                        
+                        <polygon points="130,60 140,55 140,65" fill="#666"/>
+                        <polygon points="280,60 290,55 290,65" fill="#666"/>
+                        <polygon points="430,60 440,55 440,65" fill="#666"/>
+                    </svg>
+                </div>
+                
+                <p>预处理器的主要功能包括：</p>
+                <ul>
+                    <li><span class="highlight">宏定义</span>：使用<code>#define</code>创建宏，用于文本替换</li>
+                    <li><span class="highlight">条件编译</span>：使用<code>#if</code>、<code>#ifdef</code>等指令控制代码编译</li>
+                    <li><span class="highlight">头文件包含</span>：使用<code>#include</code>将其他文件内容插入当前文件</li>
+                    <li><span class="highlight">其他指令</span>：如<code>#error</code>、<code>#pragma</code>等特殊指令</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>宏定义</h2>
+                <p>宏定义是预处理器最基本的功能之一，它使用<code>#define</code>指令创建标识符替换。</p>
+                
+                <h3>1. 对象宏</h3>
+                <p>对象宏是最简单的宏形式，用于定义常量或简单文本替换。</p>
+                
+                <div class="example-box">
+                    <h4>示例代码：</h4>
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+#define PI 3.14159
+#define MAX_SIZE 100
+#define GREETING "Hello, C++ World!"
+
+int main() {
+    cout << "PI的值是: " << PI << endl;
+    cout << "最大尺寸: " << MAX_SIZE << endl;
+    cout << GREETING << endl;
+    
+    return 0;
+}</code></pre>
+                </div>
+                
+                <h3>2. 函数宏</h3>
+                <p>函数宏可以接受参数，实现类似函数的功能，但要注意参数的使用方式。</p>
+                
+                <div class="example-box">
+                    <h4>示例代码：</h4>
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+#define SQUARE(x) ((x) * (x))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define PRINT_ARRAY(arr, size) \
+    for(int i = 0; i < size; i++) \
+        cout << arr[i] << " "; \
+    cout << endl;
+
+int main() {
+    int num = 5;
+    cout << num << "的平方是: " << SQUARE(num) << endl;
+    
+    int a = 10, b = 20;
+    cout << a << "和" << b << "中较大的是: " << MAX(a, b) << endl;
+    
+    int arr[] = {1, 2, 3, 4, 5};
+    PRINT_ARRAY(arr, 5);
+    
+    return 0;
+}</code></pre>
+                </div>
+                
+                <div class="warning">
+                    <p><strong>注意：</strong>函数宏中的参数要用括号括起来，避免运算符优先级问题。多行宏使用反斜杠<code>\</code>续行。</p>
+                </div>
+                
+                <h3>3. 预定义宏</h3>
+                <p>C++提供了一些预定义的宏，用于获取编译环境信息。</p>
+                
+                <table>
+                    <tr>
+                        <th>宏名称</th>
+                        <th>描述</th>
+                        <th>示例值</th>
+                    </tr>
+                    <tr>
+                        <td><code>__FILE__</code></td>
+                        <td>当前文件名</td>
+                        <td>"main.cpp"</td>
+                    </tr>
+                    <tr>
+                        <td><code>__LINE__</code></td>
+                        <td>当前行号</td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td><code>__DATE__</code></td>
+                        <td>编译日期</td>
+                        <td>"May 15 2023"</td>
+                    </tr>
+                    <tr>
+                        <td><code>__TIME__</code></td>
+                        <td>编译时间</td>
+                        <td>"14:30:25"</td>
+                    </tr>
+                    <tr>
+                        <td><code>__cplusplus</code></td>
+                        <td>C++标准版本</td>
+                        <td>201703L (C++17)</td>
+                    </tr>
+                </table>
+                
+                <div class="example-box">
+                    <h4>示例代码：</h4>
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout << "文件名: " << __FILE__ << endl;
+    cout << "行号: " << __LINE__ << endl;
+    cout << "编译日期: " << __DATE__ << endl;
+    cout << "编译时间: " << __TIME__ << endl;
+    cout << "C++标准: " << __cplusplus << endl;
+    
+    return 0;
+}</code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>条件编译</h2>
+                <p>条件编译允许根据特定条件决定是否编译某段代码，常用于调试、跨平台兼容等场景。</p>
+                
+                <h3>1. 基本条件编译指令</h3>
+                
+                <table>
+                    <tr>
+                        <th>指令</th>
+                        <th>描述</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td><code>#if</code></td>
+                        <td>如果条件为真，编译后续代码</td>
+                        <td><code>#if DEBUG</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>#ifdef</code></td>
+                        <td>如果宏已定义，编译后续代码</td>
+                        <td><code>#ifdef WINDOWS</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>#ifndef</code></td>
+                        <td>如果宏未定义，编译后续代码</td>
+                        <td><code>#ifndef LINUX</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>#else</code></td>
+                        <td>提供备选编译分支</td>
+                        <td><code>#else</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>#elif</code></td>
+                        <td>else if的预处理器版本</td>
+                        <td><code>#elif defined(MAC)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>#endif</code></td>
+                        <td>结束条件编译块</td>
+                        <td><code>#endif</code></td>
+                    </tr>
+                </table>
+                
+                <h3>2. 条件编译示例</h3>
+                
+                <div class="example-box">
+                    <h4>示例代码：调试版本与发布版本</h4>
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+#define DEBUG 1  // 1表示调试模式，0表示发布模式
+
+int main() {
+    int x = 10, y = 20;
+    
+    #if DEBUG
+        cout << "调试信息: x=" << x << ", y=" << y << endl;
+        cout << "调试模式开启" << endl;
+    #else
+        cout << "发布模式运行" << endl;
+    #endif
+    
+    int result = x + y;
+    cout << "结果是: " << result << endl;
+    
+    return 0;
+}</code></pre>
+                </div>
+                
+                <div class="example-box">
+                    <h4>示例代码：跨平台兼容</h4>
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+// 模拟不同平台的定义
+#define WINDOWS
+// #define LINUX
+// #define MAC
+
+int main() {
+    cout << "程序开始运行..." << endl;
+    
+    #ifdef WINDOWS
+        cout << "Windows平台特定代码" << endl;
+        // Windows特有的API调用
+    #elif defined(LINUX)
+        cout << "Linux平台特定代码" << endl;
+        // Linux特有的系统调用
+    #elif defined(MAC)
+        cout << "Mac平台特定代码" << endl;
+        // macOS特有的功能
+    #else
+        cout << "未知平台" << endl;
+    #endif
+    
+    cout << "通用代码部分" << endl;
+    
+    return 0;
+}</code></pre>
+                </div>
+                
+                <div class="svg-container">
+                    <svg width="500" height="200" viewBox="0 0 500 200">
+                        <rect x="50" y="30" width="400" height="140" rx="10" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2"/>
+                        
+                        <rect x="70" y="50" width="120" height="30" rx="5" fill="#42a5f5"/>
+                        <text x="130" y="70" text-anchor="middle" fill="white" font-size="14">条件检查</text>
+                        
+                        <rect x="70" y="100" width="120" height="30" rx="5" fill="#66bb6a"/>
+                        <text x="130" y="120" text-anchor="middle" fill="white" font-size="14">代码选择</text>
+                        
+                        <rect x="70" y="150" width="120" height="30" rx="5" fill="#7e57c2"/>
+                        <text x="130" y="170" text-anchor="middle" fill="white" font-size="14">编译结果</text>
+                        
+                        <rect x="250" y="50" width="180" height="110" rx="5" fill="#fff3e0" stroke="#ffa726" stroke-width="1"/>
+                        <text x="340" y="70" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">条件编译过程</text>
+                        
+                        <text x="340" y="95" text-anchor="middle" fill="#333" font-size="12">1. 预处理器检查条件</text>
+                        <text x="340" y="115" text-anchor="middle" fill="#333" font-size="12">2. 根据条件选择代码</text>
+                        <text x="340" y="135" text-anchor="middle" fill="#333" font-size="12">3. 仅编译选中的代码</text>
+                        
+                        <polygon points="190,65 200,60 200,70" fill="#666"/>
+                        <polygon points="190,115 200,110 200,120" fill="#666"/>
+                        <polygon points="190,165 200,160 200,170" fill="#666"/>
+                    </svg>
+                </div>
+            </section>
+            
+            <section>
+                <h2>头文件保护</h2>
+                <p>头文件保护用于防止头文件被多次包含导致的重复定义错误，是C++编程中的重要实践。</p>
+                
+                <h3>1. 头文件保护机制</h3>
+                <p>使用<code>#ifndef</code>、<code>#define</code>和<code>#endif</code>组合实现头文件保护。</p>
+                
+                <div class="example-box">
+                    <h4>示例：math_utils.h</h4>
+                    <pre><code>#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+
+// 头文件内容
+int add(int a, int b);
+int subtract(int a, int b);
+double multiply(double a, double b);
+double divide(double a, double b);
+
+#endif // MATH_UTILS_H</code></pre>
+                </div>
+                
+                <h3>2. 头文件保护的工作原理</h3>
+                <ol>
+                    <li>第一次包含头文件时，<code>MATH_UTILS_H</code>未定义，条件为真</li>
+                    <li>定义<code>MATH_UTILS_H</code>宏，包含头文件内容</li>
+                    <li>后续包含同一头文件时，<code>MATH_UTILS_H</code>已定义，跳过内容</li>
+                </ol>
+                
+                <div class="svg-container">
+                    <svg width="550" height="300" viewBox="0 0 550 300">
+                        <rect x="50" y="30" width="450" height="240" rx="10" fill="#f3e5f5" stroke="#7e57c2" stroke-width="2"/>
+                        
+                        <rect x="80" y="60" width="390" height="40" rx="5" fill="#e1bee7"/>
+                        <text x="275" y="85" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">第一次包含头文件</text>
+                        
+                        <rect x="80" y="120" width="390" height="40" rx="5" fill="#ce93d8"/>
+                        <text x="275" y="145" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">定义保护宏，包含内容</text>
+                        
+                        <rect x="80" y="180" width="390" height="40" rx="5" fill="#ba68c8"/>
+                        <text x="275" y="205" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">后续包含，跳过内容</text>
+                        
+                        <text x="275" y="250" text-anchor="middle" fill="#333" font-size="12">防止重复定义，避免编译错误</text>
+                        
+                        <polygon points="275,100 285,95 285,105" fill="#666"/>
+                        <polygon points="275,160 285,155 285,165" fill="#666"/>
+                    </svg>
+                </div>
+                
+                <h3>3. 实际应用示例</h3>
+                
+                <div class="example-box">
+                    <h4>完整的头文件使用示例</h4>
+                    <pre><code>// math_utils.h
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int subtract(int a, int b) {
+    return a - b;
+}
+
+#endif // MATH_UTILS_H</code></pre>
+
+                    <pre><code>// geometry.h
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
+
+#include "math_utils.h"  // 安全包含，不会重复
+
+double circleArea(double radius) {
+    return 3.14159 * radius * radius;
+}
+
+#endif // GEOMETRY_H</code></pre>
+
+                    <pre><code>// main.cpp
+#include &lt;iostream&gt;
+#include "math_utils.h"
+#include "geometry.h"    // 也包含了math_utils.h，但受保护
+
+using namespace std;
+
+int main() {
+    cout << "5 + 3 = " << add(5, 3) << endl;
+    cout << "半径为3的圆面积: " << circleArea(3) << endl;
+    
+    return 0;
+}</code></pre>
+                </div>
+                
+                <div class="note">
+                    <p><strong>最佳实践：</strong>现代C++中也可以使用<code>#pragma once</code>指令实现头文件保护，它更简洁但非标准，不过被大多数现代编译器支持。</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2>综合应用实例</h2>
+                <p>下面是一个综合应用宏定义、条件编译和头文件保护的完整示例。</p>
+                
+                <div class="example-box">
+                    <h4>综合示例：可配置的数学库</h4>
+                    <pre><code>// config.h - 配置文件
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// 配置选项
+#define ENABLE_LOGGING 1
+#define PRECISION_HIGH 1
+#define PLATFORM_WINDOWS 1
+
+// 根据精度配置定义常量
+#if PRECISION_HIGH
+    #define PI 3.141592653589793
+#else
+    #define PI 3.14159
+#endif
+
+#endif // CONFIG_H</code></pre>
+
+                    <pre><code>// math_library.h - 数学库头文件
+#ifndef MATH_LIBRARY_H
+#define MATH_LIBRARY_H
+
+#include "config.h"
+
+// 调试宏
+#if ENABLE_LOGGING
+    #define LOG(msg) cout << "LOG: " << msg << " (File: " << __FILE__ << ", Line: " << __LINE__ << ")" << endl
+#else
+    #define LOG(msg) // 空定义，编译时移除
+#endif
+
+// 平台特定宏
+#ifdef PLATFORM_WINDOWS
+    #define PLATFORM_NAME "Windows"
+#elif defined(PLATFORM_LINUX)
+    #define PLATFORM_NAME "Linux"
+#else
+    #define PLATFORM_NAME "Unknown"
+#endif
+
+// 函数声明
+double circleArea(double radius);
+double circleCircumference(double radius);
+
+#endif // MATH_LIBRARY_H</code></pre>
+
+                    <pre><code>// math_library.cpp - 数学库实现
+#include &lt;iostream&gt;
+#include "math_library.h"
+
+using namespace std;
+
+double circleArea(double radius) {
+    LOG("计算圆面积");
+    return PI * radius * radius;
+}
+
+double circleCircumference(double radius) {
+    LOG("计算圆周长");
+    return 2 * PI * radius;
+}</code></pre>
+
+                    <pre><code>// main.cpp - 主程序
+#include &lt;iostream&gt;
+#include "math_library.h"
+
+using namespace std;
+
+int main() {
+    cout << "运行平台: " << PLATFORM_NAME << endl;
+    cout << "数学库演示程序" << endl;
+    
+    double radius = 5.0;
+    cout << "半径为 " << radius << " 的圆:" << endl;
+    cout << "面积: " << circleArea(radius) << endl;
+    cout << "周长: " << circleCircumference(radius) << endl;
+    
+    #if ENABLE_LOGGING
+        cout << "日志功能已启用" << endl;
+    #else
+        cout << "日志功能已禁用" << endl;
+    #endif
+    
+    return 0;
+}</code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>总结</h2>
+                <p>C++预处理器是强大的代码组织工具，合理使用可以：</p>
+                <ul>
+                    <li>提高代码的可维护性和可读性</li>
+                    <li>实现跨平台兼容</li>
+                    <li>创建调试和发布版本的不同行为</li>
+                    <li>防止头文件重复包含错误</li>
+                </ul>
+                
+                <div class="warning">
+                    <p><strong>注意事项：</strong></p>
+                    <ul>
+                        <li>避免过度使用宏，特别是复杂的函数宏</li>
+                        <li>宏只是文本替换，没有类型检查</li>
+                        <li>现代C++中，很多宏的功能可以被constexpr、inline函数、模板等替代</li>
+                        <li>保持宏名称唯一，避免命名冲突</li>
+                    </ul>
+                </div>
+                
+                <p>通过本课程的学习，你应该已经掌握了C++预处理器的核心概念和使用方法，能够在实际项目中灵活运用宏定义、条件编译和头文件保护技术。</p>
+            </section>
+        </div>
+        
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

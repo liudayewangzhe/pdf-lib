@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++数组详解 - 从入门到精通</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 50%, #c8e6c9 100%);
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #42a5f5, #66bb6a);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 5px solid #ffd54f;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #42a5f5;
+        }
+        
+        h2 {
+            color: #1565c0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #90caf9;
+        }
+        
+        h3 {
+            color: #2e7d32;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #42a5f5;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8fdff;
+        }
+        
+        tr:hover {
+            background: #e3f2fd;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .svg-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #42a5f5, #66bb6a);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++数组详解</h1>
+            <div class="subtitle">一维数组、二维数组、数组遍历、数组排序</div>
+        </header>
+        
+        <div class="main-content">
+            <div class="section">
+                <h2>数组的基本概念</h2>
+                <p>数组是C++中一种非常重要的数据结构，它允许我们在一个变量中存储多个相同类型的值。数组中的每个值称为元素，可以通过索引（下标）来访问。</p>
+                
+                <div class="svg-container">
+                    <svg width="400" height="120" viewBox="0 0 400 120">
+                        <rect x="10" y="10" width="50" height="50" fill="#42a5f5" stroke="#1565c0" stroke-width="2"/>
+                        <text x="35" y="40" text-anchor="middle" fill="white" font-weight="bold">0</text>
+                        <rect x="70" y="10" width="50" height="50" fill="#66bb6a" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="95" y="40" text-anchor="middle" fill="white" font-weight="bold">1</text>
+                        <rect x="130" y="10" width="50" height="50" fill="#ffd54f" stroke="#ff8f00" stroke-width="2"/>
+                        <text x="155" y="40" text-anchor="middle" fill="white" font-weight="bold">2</text>
+                        <rect x="190" y="10" width="50" height="50" fill="#ef5350" stroke="#c62828" stroke-width="2"/>
+                        <text x="215" y="40" text-anchor="middle" fill="white" font-weight="bold">3</text>
+                        <rect x="250" y="10" width="50" height="50" fill="#ab47bc" stroke="#6a1b9a" stroke-width="2"/>
+                        <text x="275" y="40" text-anchor="middle" fill="white" font-weight="bold">4</text>
+                        <text x="200" y="90" text-anchor="middle" fill="#333" font-size="14">一维数组示意图</text>
+                    </svg>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>提示：</strong> 数组索引从0开始，而不是1。这意味着第一个元素的索引是0，第二个是1，依此类推。
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>一维数组</h2>
+                <p>一维数组是最简单的数组形式，所有元素排列在一条直线上。</p>
+                
+                <h3>声明和初始化</h3>
+                <div class="example-grid">
+                    <div>
+                        <h4>声明语法</h4>
+                        <div class="code-block">
+<pre>数据类型 数组名[数组大小];</pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>初始化语法</h4>
+                        <div class="code-block">
+<pre>数据类型 数组名[数组大小] = {值1, 值2, ...};</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>示例代码</h3>
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 声明一个包含5个整数的数组
+    int numbers[5];
+    
+    // 初始化数组
+    int scores[5] = {85, 92, 78, 90, 88};
+    
+    // 访问数组元素
+    cout << "第一个分数: " << scores[0] << endl;
+    cout << "第三个分数: " << scores[2] << endl;
+    
+    // 修改数组元素
+    scores[1] = 95;
+    cout << "修改后的第二个分数: " << scores[1] << endl;
+    
+    return 0;
+}</pre>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>数组操作</th>
+                            <th>语法示例</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>声明</td>
+                            <td>int arr[10];</td>
+                            <td>声明一个包含10个整数的数组</td>
+                        </tr>
+                        <tr>
+                            <td>初始化</td>
+                            <td>int arr[3] = {1, 2, 3};</td>
+                            <td>声明并初始化数组</td>
+                        </tr>
+                        <tr>
+                            <td>部分初始化</td>
+                            <td>int arr[5] = {1, 2};</td>
+                            <td>前两个元素初始化，其余为0</td>
+                        </tr>
+                        <tr>
+                            <td>自动大小</td>
+                            <td>int arr[] = {1, 2, 3};</td>
+                            <td>编译器自动计算数组大小</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>二维数组</h2>
+                <p>二维数组可以看作是一个表格，有行和列两个维度。</p>
+                
+                <div class="svg-container">
+                    <svg width="350" height="200" viewBox="0 0 350 200">
+                        <!-- 行标题 -->
+                        <text x="30" y="40" text-anchor="middle" font-weight="bold">行0</text>
+                        <text x="30" y="80" text-anchor="middle" font-weight="bold">行1</text>
+                        <text x="30" y="120" text-anchor="middle" font-weight="bold">行2</text>
+                        
+                        <!-- 列标题 -->
+                        <text x="80" y="20" text-anchor="middle" font-weight="bold">列0</text>
+                        <text x="140" y="20" text-anchor="middle" font-weight="bold">列1</text>
+                        <text x="200" y="20" text-anchor="middle" font-weight="bold">列2</text>
+                        <text x="260" y="20" text-anchor="middle" font-weight="bold">列3</text>
+                        
+                        <!-- 表格单元格 -->
+                        <rect x="60" y="30" width="40" height="30" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2"/>
+                        <text x="80" y="50" text-anchor="middle">[0][0]</text>
+                        
+                        <rect x="120" y="30" width="40" height="30" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2"/>
+                        <text x="140" y="50" text-anchor="middle">[0][1]</text>
+                        
+                        <rect x="180" y="30" width="40" height="30" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2"/>
+                        <text x="200" y="50" text-anchor="middle">[0][2]</text>
+                        
+                        <rect x="240" y="30" width="40" height="30" fill="#e3f2fd" stroke="#42a5f5" stroke-width="2"/>
+                        <text x="260" y="50" text-anchor="middle">[0][3]</text>
+                        
+                        <!-- 第二行 -->
+                        <rect x="60" y="70" width="40" height="30" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+                        <text x="80" y="90" text-anchor="middle">[1][0]</text>
+                        
+                        <rect x="120" y="70" width="40" height="30" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+                        <text x="140" y="90" text-anchor="middle">[1][1]</text>
+                        
+                        <rect x="180" y="70" width="40" height="30" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+                        <text x="200" y="90" text-anchor="middle">[1][2]</text>
+                        
+                        <rect x="240" y="70" width="40" height="30" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+                        <text x="260" y="90" text-anchor="middle">[1][3]</text>
+                        
+                        <!-- 第三行 -->
+                        <rect x="60" y="110" width="40" height="30" fill="#fff3e0" stroke="#ffd54f" stroke-width="2"/>
+                        <text x="80" y="130" text-anchor="middle">[2][0]</text>
+                        
+                        <rect x="120" y="110" width="40" height="30" fill="#fff3e0" stroke="#ffd54f" stroke-width="2"/>
+                        <text x="140" y="130" text-anchor="middle">[2][1]</text>
+                        
+                        <rect x="180" y="110" width="40" height="30" fill="#fff3e0" stroke="#ffd54f" stroke-width="2"/>
+                        <text x="200" y="130" text-anchor="middle">[2][2]</text>
+                        
+                        <rect x="240" y="110" width="40" height="30" fill="#fff3e0" stroke="#ffd54f" stroke-width="2"/>
+                        <text x="260" y="130" text-anchor="middle">[2][3]</text>
+                        
+                        <text x="175" y="170" text-anchor="middle" fill="#333" font-size="14">二维数组示意图 (3行4列)</text>
+                    </svg>
+                </div>
+                
+                <h3>声明和初始化</h3>
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 声明一个3行4列的二维数组
+    int matrix[3][4];
+    
+    // 初始化二维数组
+    int grid[2][3] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
+    
+    // 访问二维数组元素
+    cout << "第一行第二列: " << grid[0][1] << endl;
+    cout << "第二行第三列: " << grid[1][2] << endl;
+    
+    return 0;
+}</pre>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>注意：</strong> 在C++中，二维数组在内存中仍然是连续存储的，按行优先顺序排列。
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>数组遍历</h2>
+                <p>遍历数组是指按顺序访问数组中的每个元素。我们通常使用循环结构来实现数组遍历。</p>
+                
+                <h3>一维数组遍历</h3>
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int numbers[] = {10, 20, 30, 40, 50};
+    int size = 5;
+    
+    // 使用for循环遍历
+    cout << "使用for循环遍历:" << endl;
+    for(int i = 0; i < size; i++) {
+        cout << "numbers[" << i << "] = " << numbers[i] << endl;
+    }
+    
+    // 使用范围for循环遍历 (C++11)
+    cout << "\n使用范围for循环遍历:" << endl;
+    for(int num : numbers) {
+        cout << num << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}</pre>
+                </div>
+                
+                <h3>二维数组遍历</h3>
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int matrix[3][4] = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12}
+    };
+    
+    // 使用嵌套循环遍历二维数组
+    cout << "二维数组内容:" << endl;
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 4; j++) {
+            cout << matrix[i][j] << "\t";
+        }
+        cout << endl;
+    }
+    
+    return 0;
+}</pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>数组排序</h2>
+                <p>对数组进行排序是常见的操作。C++提供了多种排序方法，包括使用标准库函数和手动实现排序算法。</p>
+                
+                <h3>使用标准库排序</h3>
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;  // 包含sort函数
+using namespace std;
+
+int main() {
+    int numbers[] = {64, 34, 25, 12, 22, 11, 90};
+    int size = 7;
+    
+    cout << "排序前: ";
+    for(int i = 0; i < size; i++) {
+        cout << numbers[i] << " ";
+    }
+    cout << endl;
+    
+    // 使用sort函数排序 (默认升序)
+    sort(numbers, numbers + size);
+    
+    cout << "排序后: ";
+    for(int i = 0; i < size; i++) {
+        cout << numbers[i] << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}</pre>
+                </div>
+                
+                <h3>手动实现冒泡排序</h3>
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+using namespace std;
+
+void bubbleSort(int arr[], int n) {
+    for(int i = 0; i < n-1; i++) {
+        for(int j = 0; j < n-i-1; j++) {
+            if(arr[j] > arr[j+1]) {
+                // 交换元素
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int numbers[] = {64, 34, 25, 12, 22, 11, 90};
+    int size = 7;
+    
+    cout << "排序前: ";
+    for(int i = 0; i < size; i++) {
+        cout << numbers[i] << " ";
+    }
+    cout << endl;
+    
+    bubbleSort(numbers, size);
+    
+    cout << "排序后: ";
+    for(int i = 0; i < size; i++) {
+        cout << numbers[i] << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}</pre>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>排序算法</th>
+                            <th>平均时间复杂度</th>
+                            <th>特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>冒泡排序</td>
+                            <td>O(n²)</td>
+                            <td>简单易懂，效率较低</td>
+                        </tr>
+                        <tr>
+                            <td>选择排序</td>
+                            <td>O(n²)</td>
+                            <td>简单，交换次数少</td>
+                        </tr>
+                        <tr>
+                            <td>插入排序</td>
+                            <td>O(n²)</td>
+                            <td>对小数据集效率高</td>
+                        </tr>
+                        <tr>
+                            <td>快速排序</td>
+                            <td>O(n log n)</td>
+                            <td>效率高，常用</td>
+                        </tr>
+                        <tr>
+                            <td>std::sort</td>
+                            <td>O(n log n)</td>
+                            <td>C++标准库，推荐使用</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>数组应用实例</h2>
+                <p>下面是一个综合应用数组的例子，演示如何统计学生成绩。</p>
+                
+                <div class="code-block">
+<pre>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    const int STUDENT_COUNT = 5;
+    const int SUBJECT_COUNT = 3;
+    
+    // 学生成绩表：5个学生，3门科目
+    int scores[STUDENT_COUNT][SUBJECT_COUNT] = {
+        {85, 92, 78},
+        {90, 88, 95},
+        {76, 82, 90},
+        {88, 79, 85},
+        {92, 96, 89}
+    };
+    
+    string subjects[SUBJECT_COUNT] = {"数学", "语文", "英语"};
+    
+    // 计算每个学生的平均分
+    cout << "学生平均分:" << endl;
+    for(int i = 0; i < STUDENT_COUNT; i++) {
+        int sum = 0;
+        for(int j = 0; j < SUBJECT_COUNT; j++) {
+            sum += scores[i][j];
+        }
+        double average = static_cast&lt;double&gt;(sum) / SUBJECT_COUNT;
+        cout << "学生" << i+1 << ": " << average << "分" << endl;
+    }
+    
+    // 计算每门科目的平均分
+    cout << "\n科目平均分:" << endl;
+    for(int j = 0; j < SUBJECT_COUNT; j++) {
+        int sum = 0;
+        for(int i = 0; i < STUDENT_COUNT; i++) {
+            sum += scores[i][j];
+        }
+        double average = static_cast&lt;double&gt;(sum) / STUDENT_COUNT;
+        cout << subjects[j] << ": " << average << "分" << endl;
+    }
+    
+    return 0;
+}</pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>数组使用注意事项</h2>
+                <ul>
+                    <li><strong>数组越界：</strong> 访问数组时不要超出数组的索引范围，否则会导致未定义行为。</li>
+                    <li><strong>数组大小：</strong> 数组大小必须是常量表达式，不能是变量（除非使用动态数组）。</li>
+                    <li><strong>内存分配：</strong> 数组在栈上分配内存，大数组可能导致栈溢出。</li>
+                    <li><strong>数组名：</strong> 数组名代表数组首元素的地址，可以当作指针使用。</li>
+                    <li><strong>数组传递：</strong> 将数组传递给函数时，会退化为指针，需要同时传递数组大小。</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <strong>重要提醒：</strong> 数组索引从0开始，最后一个元素的索引是<code>数组大小-1</code>。访问<code>arr[数组大小]</code>会导致数组越界错误！
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

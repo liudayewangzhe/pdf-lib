@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++运算符重载详解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #f3e5f5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #4db6ac;
+        }
+        
+        h1 {
+            color: #00695c;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #00796b;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #80cbc4;
+        }
+        
+        h3 {
+            color: #00897b;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4db6ac;
+        }
+        
+        .highlight {
+            background-color: #e0f2f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #b2dfdb;
+        }
+        
+        th {
+            background-color: #4db6ac;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f1f8e9;
+        }
+        
+        tr:hover {
+            background-color: #e0f2f1;
+        }
+        
+        pre {
+            background-color: #263238;
+            color: #e0f2f1;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        code {
+            background-color: #e0f2f1;
+            color: #00695c;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .comparison {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #4db6ac;
+            color: #00796b;
+            font-weight: bold;
+        }
+        
+        .note {
+            background-color: #fff9c4;
+            border-left: 5px solid #ffd600;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .example {
+            background-color: #f3e5f5;
+            border-left: 5px solid #ba68c8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .comparison-item {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>C++运算符重载详解</h1>
+            <p>成员函数重载、友元函数重载、常用运算符重载</p>
+        </div>
+        
+        <div class="card">
+            <h2>什么是运算符重载？</h2>
+            <p>运算符重载是C++中的一项强大功能，它允许我们重新定义大多数内置运算符的行为，使其能够用于自定义数据类型（如类或结构体）。通过运算符重载，我们可以使代码更直观、更易读。</p>
+            
+            <div class="svg-container">
+                <svg width="400" height="150" viewBox="0 0 400 150">
+                    <rect x="10" y="10" width="180" height="60" rx="10" fill="#4db6ac" opacity="0.8"/>
+                    <text x="100" y="45" text-anchor="middle" fill="white" font-size="16" font-weight="bold">内置数据类型</text>
+                    <text x="100" y="65" text-anchor="middle" fill="white" font-size="14">int a = 5, b = 3;</text>
+                    
+                    <rect x="210" y="10" width="180" height="60" rx="10" fill="#ba68c8" opacity="0.8"/>
+                    <text x="300" y="45" text-anchor="middle" fill="white" font-size="16" font-weight="bold">自定义数据类型</text>
+                    <text x="300" y="65" text-anchor="middle" fill="white" font-size="14">Complex c1, c2;</text>
+                    
+                    <path d="M 100 80 L 100 100 L 300 100 L 300 80" stroke="#00796b" stroke-width="2" fill="none"/>
+                    <text x="200" y="120" text-anchor="middle" fill="#00796b" font-size="14" font-weight="bold">运算符重载</text>
+                    
+                    <rect x="150" y="130" width="100" height="40" rx="5" fill="#ff9800" opacity="0.8"/>
+                    <text x="200" y="155" text-anchor="middle" fill="white" font-size="14" font-weight="bold">c1 + c2</text>
+                </svg>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>运算符重载的优势：</strong></p>
+                <ul>
+                    <li>使自定义类型的使用更直观</li>
+                    <li>提高代码的可读性</li>
+                    <li>保持代码的一致性</li>
+                    <li>扩展语言功能</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>运算符重载的两种方式</h2>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h3>1. 成员函数重载</h3>
+                    <p>运算符重载作为类的成员函数时，左侧操作数必须是该类的对象。</p>
+                    
+                    <div class="example">
+                        <p><strong>语法：</strong></p>
+                        <pre><code>返回类型 operator运算符(参数列表) {
+    // 函数体
+}</code></pre>
+                    </div>
+                    
+                    <div class="example">
+                        <p><strong>示例：</strong></p>
+                        <pre><code>class Complex {
+private:
+    double real, imag;
+public:
+    Complex(double r = 0, double i = 0) : real(r), imag(i) {}
+    
+    // 成员函数重载 +
+    Complex operator+(const Complex& other) const {
+        return Complex(real + other.real, imag + other.imag);
+    }
+};</code></pre>
+                    </div>
+                </div>
+                
+                <div class="comparison-item">
+                    <h3>2. 友元函数重载</h3>
+                    <p>运算符重载作为友元函数时，可以访问类的私有成员，且操作数顺序更灵活。</p>
+                    
+                    <div class="example">
+                        <p><strong>语法：</strong></p>
+                        <pre><code>friend 返回类型 operator运算符(参数列表) {
+    // 函数体
+}</code></pre>
+                    </div>
+                    
+                    <div class="example">
+                        <p><strong>示例：</strong></p>
+                        <pre><code>class Complex {
+private:
+    double real, imag;
+public:
+    Complex(double r = 0, double i = 0) : real(r), imag(i) {}
+    
+    // 友元函数重载 <<
+    friend ostream& operator<<(ostream& os, const Complex& c) {
+        os << c.real << " + " << c.imag << "i";
+        return os;
+    }
+};</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="svg-container">
+                <svg width="500" height="200" viewBox="0 0 500 200">
+                    <rect x="50" y="30" width="180" height="60" rx="10" fill="#4db6ac" opacity="0.8"/>
+                    <text x="140" y="50" text-anchor="middle" fill="white" font-size="14" font-weight="bold">成员函数重载</text>
+                    <text x="140" y="70" text-anchor="middle" fill="white" font-size="12">obj1 + obj2</text>
+                    
+                    <rect x="270" y="30" width="180" height="60" rx="10" fill="#ba68c8" opacity="0.8"/>
+                    <text x="360" y="50" text-anchor="middle" fill="white" font-size="14" font-weight="bold">友元函数重载</text>
+                    <text x="360" y="70" text-anchor="middle" fill="white" font-size="12">cout << obj</text>
+                    
+                    <path d="M 140 100 L 140 130 L 360 130 L 360 100" stroke="#00796b" stroke-width="2" fill="none"/>
+                    <text x="250" y="150" text-anchor="middle" fill="#00796b" font-size="14" font-weight="bold">运算符重载的两种方式</text>
+                    
+                    <rect x="200" y="160" width="100" height="30" rx="5" fill="#ff9800" opacity="0.8"/>
+                    <text x="250" y="180" text-anchor="middle" fill="white" font-size="12" font-weight="bold">扩展C++功能</text>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>常用运算符重载示例</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>运算符</th>
+                        <th>重载方式</th>
+                        <th>示例代码</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>算术运算符 (+, -, *, /)</td>
+                        <td>成员函数/友元函数</td>
+                        <td><code>Complex operator+(const Complex&)</code></td>
+                        <td>实现自定义类型的算术运算</td>
+                    </tr>
+                    <tr>
+                        <td>关系运算符 (==, !=, &lt;, &gt;)</td>
+                        <td>成员函数/友元函数</td>
+                        <td><code>bool operator==(const Complex&)</code></td>
+                        <td>比较两个对象是否相等</td>
+                    </tr>
+                    <tr>
+                        <td>赋值运算符 (=)</td>
+                        <td>成员函数</td>
+                        <td><code>Complex& operator=(const Complex&)</code></td>
+                        <td>实现对象间的赋值</td>
+                    </tr>
+                    <tr>
+                        <td>下标运算符 ([])</td>
+                        <td>成员函数</td>
+                        <td><code>int& operator[](int index)</code></td>
+                        <td>实现类似数组的访问</td>
+                    </tr>
+                    <tr>
+                        <td>函数调用运算符 (())</td>
+                        <td>成员函数</td>
+                        <td><code>返回值 operator()(参数)</code></td>
+                        <td>创建函数对象（仿函数）</td>
+                    </tr>
+                    <tr>
+                        <td>流运算符 (&lt;&lt;, &gt;&gt;)</td>
+                        <td>友元函数</td>
+                        <td><code>friend ostream& operator&lt;&lt;(ostream&, const T&)</code></td>
+                        <td>实现自定义类型的输入输出</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <h3>完整示例：复数类运算符重载</h3>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+class Complex {
+private:
+    double real, imag;
+public:
+    Complex(double r = 0, double i = 0) : real(r), imag(i) {}
+    
+    // 成员函数重载 +
+    Complex operator+(const Complex& other) const {
+        return Complex(real + other.real, imag + other.imag);
+    }
+    
+    // 成员函数重载 -
+    Complex operator-(const Complex& other) const {
+        return Complex(real - other.real, imag - other.imag);
+    }
+    
+    // 成员函数重载 ==
+    bool operator==(const Complex& other) const {
+        return (real == other.real) && (imag == other.imag);
+    }
+    
+    // 友元函数重载 <<
+    friend ostream& operator<<(ostream& os, const Complex& c) {
+        os << c.real;
+        if (c.imag >= 0) os << " + " << c.imag << "i";
+        else os << " - " << -c.imag << "i";
+        return os;
+    }
+    
+    // 友元函数重载 >>
+    friend istream& operator>>(istream& is, Complex& c) {
+        cout << "请输入实部: ";
+        is >> c.real;
+        cout << "请输入虚部: ";
+        is >> c.imag;
+        return is;
+    }
+};
+
+int main() {
+    Complex c1(3, 4), c2(1, 2);
+    Complex c3 = c1 + c2;  // 使用重载的+运算符
+    Complex c4 = c1 - c2;  // 使用重载的-运算符
+    
+    cout << "c1 = " << c1 << endl;
+    cout << "c2 = " << c2 << endl;
+    cout << "c1 + c2 = " << c3 << endl;
+    cout << "c1 - c2 = " << c4 << endl;
+    
+    if (c1 == c2) {
+        cout << "c1 等于 c2" << endl;
+    } else {
+        cout << "c1 不等于 c2" << endl;
+    }
+    
+    return 0;
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>运算符重载的规则与限制</h2>
+            
+            <div class="highlight">
+                <p><strong>可以重载的运算符：</strong></p>
+                <ul>
+                    <li>算术运算符：+、-、*、/、%、++、--</li>
+                    <li>关系运算符：==、!=、&lt;、&gt;、&lt;=、&gt;=</li>
+                    <li>逻辑运算符：&&、||、!</li>
+                    <li>位运算符：&、|、~、^、&lt;&lt;、&gt;&gt;</li>
+                    <li>赋值运算符：=、+=、-=、*=、/=、%=、&=、|=、^=、&lt;&lt;=、&gt;&gt;=</li>
+                    <li>其他运算符：[]、()、-&gt;、,、new、delete、new[]、delete[]</li>
+                </ul>
+            </div>
+            
+            <div class="note">
+                <p><strong>不能重载的运算符：</strong></p>
+                <ul>
+                    <li>成员访问运算符：.（点运算符）</li>
+                    <li>成员指针访问运算符：.*</li>
+                    <li>作用域解析运算符：::</li>
+                    <li>条件运算符：?:</li>
+                    <li>sizeof 运算符</li>
+                    <li>typeid 运算符</li>
+                </ul>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>运算符重载的重要规则：</strong></p>
+                <ol>
+                    <li>不能创建新的运算符，只能重载已有的运算符</li>
+                    <li>重载运算符时，至少有一个操作数是用户定义的类型</li>
+                    <li>不能改变运算符的优先级和结合性</li>
+                    <li>不能改变运算符的操作数个数</li>
+                    <li>除函数调用运算符()外，其他重载运算符不能有默认参数</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>运算符重载的最佳实践</h2>
+            
+            <div class="svg-container">
+                <svg width="450" height="200" viewBox="0 0 450 200">
+                    <circle cx="100" cy="100" r="40" fill="#4db6ac" opacity="0.8"/>
+                    <text x="100" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">一致性</text>
+                    
+                    <circle cx="225" cy="100" r="40" fill="#ba68c8" opacity="0.8"/>
+                    <text x="225" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">直观性</text>
+                    
+                    <circle cx="350" cy="100" r="40" fill="#ff9800" opacity="0.8"/>
+                    <text x="350" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">效率</text>
+                    
+                    <text x="100" y="160" text-anchor="middle" fill="#00796b" font-size="10">保持运算符的<br/>常规含义</text>
+                    <text x="225" y="160" text-anchor="middle" fill="#00796b" font-size="10">使代码更易读<br/>和理解</text>
+                    <text x="350" y="160" text-anchor="middle" fill="#00796b" font-size="10">避免不必要的<br/>复制和计算</text>
+                </svg>
+            </div>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h3>应该遵循的原则</h3>
+                    <ul>
+                        <li>保持运算符的直观含义</li>
+                        <li>重载相关的一组运算符</li>
+                        <li>注意返回值类型的选择</li>
+                        <li>考虑异常安全性</li>
+                        <li>提供对称的运算符重载</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-item">
+                    <h3>应该避免的做法</h3>
+                    <ul>
+                        <li>改变运算符的常规语义</li>
+                        <li>过度使用运算符重载</li>
+                        <li>重载不相关的运算符</li>
+                        <li>忽略性能影响</li>
+                        <li>违反运算符的数学规则</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <p><strong>良好实践示例：</strong></p>
+                <pre><code>// 良好的运算符重载 - 保持直观含义
+class Vector {
+public:
+    Vector operator+(const Vector& other) const;  // 向量加法
+    Vector operator-(const Vector& other) const;  // 向量减法
+    double operator*(const Vector& other) const;  // 点积
+    bool operator==(const Vector& other) const;   // 相等比较
+};</code></pre>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>蓝海资料掘金营</p>
+        </div>
+    </div>
+</body>
+</html>

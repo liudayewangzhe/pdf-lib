@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++常量成员详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f9fbe7 50%, #e8f5e9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 100, 150, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 50%, #0288d1 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 5px solid #01579b;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4fc3f7;
+        }
+        
+        h2 {
+            color: #0288d1;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #b3e5fc;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #0288d1;
+            margin: 20px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0f2f1;
+        }
+        
+        th {
+            background-color: #4fc3f7;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f1f8e9;
+        }
+        
+        tr:hover {
+            background-color: #e1f5fe;
+        }
+        
+        pre {
+            background: #f5f5f5;
+            border-left: 4px solid #4fc3f7;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        code {
+            background: #e3f2fd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #01579b;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #0288d1 0%, #01579b 100%);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .summary-box {
+            background: #e1f5fe;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #4fc3f7;
+        }
+        
+        .comparison-table {
+            background: #f9fbe7;
+            border: 2px solid #f0f4c3;
+        }
+        
+        .comparison-table th {
+            background-color: #cddc39;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++常量成员详解</h1>
+            <div class="subtitle">const成员函数、const对象、mutable关键字</div>
+        </header>
+        
+        <div class="content">
+            <section>
+                <h2>常量成员概述</h2>
+                <p>在C++中，<code>const</code>关键字用于定义常量，它可以应用于变量、函数参数、函数返回值以及类的成员。当<code>const</code>与类的成员结合使用时，就形成了常量成员的概念，主要包括：</p>
+                <ul>
+                    <li><strong>const成员函数</strong> - 不能修改对象状态的成员函数</li>
+                    <li><strong>const对象</strong> - 对象状态不能被修改的对象</li>
+                    <li><strong>mutable关键字</strong> - 允许在const成员函数中修改的成员变量</li>
+                </ul>
+                
+                <div class="svg-container">
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="50" width="150" height="100" rx="10" fill="#4fc3f7" stroke="#0288d1" stroke-width="2"/>
+                        <text x="125" y="110" text-anchor="middle" fill="white" font-size="16" font-weight="bold">const成员函数</text>
+                        
+                        <rect x="250" y="50" width="150" height="100" rx="10" fill="#4fc3f7" stroke="#0288d1" stroke-width="2"/>
+                        <text x="325" y="110" text-anchor="middle" fill="white" font-size="16" font-weight="bold">const对象</text>
+                        
+                        <rect x="450" y="50" width="150" height="100" rx="10" fill="#4fc3f7" stroke="#0288d1" stroke-width="2"/>
+                        <text x="525" y="110" text-anchor="middle" fill="white" font-size="16" font-weight="bold">mutable关键字</text>
+                        
+                        <path d="M200 100 L250 100" stroke="#0288d1" stroke-width="2" fill="none"/>
+                        <path d="M400 100 L450 100" stroke="#0288d1" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+            </section>
+            
+            <section>
+                <h2>const成员函数</h2>
+                <p>const成员函数是在函数声明和定义后面加上<code>const</code>关键字的成员函数。这种函数承诺不会修改对象的任何非mutable成员变量。</p>
+                
+                <h3>语法格式</h3>
+                <pre><code>返回类型 函数名(参数列表) const {
+    // 函数体
+}</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code>class Student {
+private:
+    string name;
+    int age;
+    mutable int accessCount;  // 使用mutable修饰
+    
+public:
+    Student(string n, int a) : name(n), age(a), accessCount(0) {}
+    
+    // const成员函数 - 不会修改对象状态
+    string getName() const {
+        accessCount++;  // 允许修改mutable成员
+        return name;
+    }
+    
+    int getAge() const {
+        accessCount++;  // 允许修改mutable成员
+        return age;
+    }
+    
+    // 非const成员函数 - 可以修改对象状态
+    void setAge(int newAge) {
+        age = newAge;
+    }
+    
+    int getAccessCount() const {
+        return accessCount;
+    }
+};</code></pre>
+                
+                <div class="tip-box">
+                    <strong>提示：</strong> const成员函数可以被const对象和非const对象调用，但非const成员函数只能被非const对象调用。
+                </div>
+            </section>
+            
+            <section>
+                <h2>const对象</h2>
+                <p>const对象是在创建时使用<code>const</code>关键字修饰的对象。这种对象的状态在创建后不能被修改。</p>
+                
+                <h3>语法格式</h3>
+                <pre><code>const 类名 对象名(参数);</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code>// 创建const对象
+const Student stu1("张三", 20);
+
+// 以下代码会导致编译错误，因为const对象不能调用非const成员函数
+// stu1.setAge(21);  // 错误！
+
+// 但可以调用const成员函数
+cout << "姓名：" << stu1.getName() << endl;
+cout << "年龄：" << stu1.getAge() << endl;</code></pre>
+                
+                <div class="warning-box">
+                    <strong>注意：</strong> const对象只能调用const成员函数，不能调用非const成员函数，否则会导致编译错误。
+                </div>
+            </section>
+            
+            <section>
+                <h2>mutable关键字</h2>
+                <p><code>mutable</code>关键字用于修饰类的成员变量，表示该变量即使在const成员函数中也可以被修改。</p>
+                
+                <h3>使用场景</h3>
+                <ul>
+                    <li>缓存计算结果</li>
+                    <li>访问计数</li>
+                    <li>调试信息记录</li>
+                    <li>线程同步相关的状态标志</li>
+                </ul>
+                
+                <h3>示例代码</h3>
+                <pre><code>class Cache {
+private:
+    mutable string cachedValue;
+    mutable bool isCached;
+    string calculateValue() const;  // 复杂的计算函数
+    
+public:
+    Cache() : isCached(false) {}
+    
+    string getValue() const {
+        if (!isCached) {
+            // 即使在const成员函数中，也可以修改mutable成员
+            cachedValue = calculateValue();
+            isCached = true;
+        }
+        return cachedValue;
+    }
+};</code></pre>
+            </section>
+            
+            <section>
+                <h2>const成员函数 vs 非const成员函数</h2>
+                <table class="comparison-table">
+                    <tr>
+                        <th>特性</th>
+                        <th>const成员函数</th>
+                        <th>非const成员函数</th>
+                    </tr>
+                    <tr>
+                        <td>调用对象</td>
+                        <td>const对象和非const对象</td>
+                        <td>只能是非const对象</td>
+                    </tr>
+                    <tr>
+                        <td>修改成员变量</td>
+                        <td>只能修改mutable成员</td>
+                        <td>可以修改所有非const成员</td>
+                    </tr>
+                    <tr>
+                        <td>函数重载</td>
+                        <td>可以与同名非const函数形成重载</td>
+                        <td>可以与同名const函数形成重载</td>
+                    </tr>
+                    <tr>
+                        <td>使用场景</td>
+                        <td>获取对象状态，不改变对象</td>
+                        <td>修改对象状态</td>
+                    </tr>
+                </table>
+            </section>
+            
+            <section>
+                <h2>综合示例</h2>
+                <p>下面是一个完整的示例，展示了const成员函数、const对象和mutable关键字的综合应用：</p>
+                
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BankAccount {
+private:
+    string accountHolder;
+    double balance;
+    mutable int transactionCount;  // 交易次数统计
+    
+public:
+    BankAccount(string holder, double initialBalance) 
+        : accountHolder(holder), balance(initialBalance), transactionCount(0) {}
+    
+    // const成员函数 - 获取账户信息
+    string getHolder() const {
+        return accountHolder;
+    }
+    
+    double getBalance() const {
+        return balance;
+    }
+    
+    int getTransactionCount() const {
+        return transactionCount;
+    }
+    
+    // 非const成员函数 - 修改账户状态
+    void deposit(double amount) {
+        balance += amount;
+        transactionCount++;
+    }
+    
+    bool withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            transactionCount++;
+            return true;
+        }
+        return false;
+    }
+    
+    // const成员函数，但可以修改mutable成员
+    void resetTransactionCount() const {
+        transactionCount = 0;  // 允许修改mutable成员
+    }
+};
+
+int main() {
+    // 创建普通对象
+    BankAccount account1("李四", 1000.0);
+    
+    // 创建const对象
+    const BankAccount account2("王五", 500.0);
+    
+    // 普通对象可以调用所有函数
+    account1.deposit(200.0);
+    cout << "账户1余额：" << account1.getBalance() << endl;
+    
+    // const对象只能调用const成员函数
+    cout << "账户2持有人：" << account2.getHolder() << endl;
+    cout << "账户2余额：" << account2.getBalance() << endl;
+    
+    // 以下代码会导致编译错误
+    // account2.deposit(100.0);  // 错误！const对象不能调用非const成员函数
+    
+    return 0;
+}</code></pre>
+            </section>
+            
+            <section>
+                <h2>最佳实践</h2>
+                <div class="summary-box">
+                    <h3>设计原则</h3>
+                    <ul>
+                        <li>将不修改对象状态的成员函数声明为const</li>
+                        <li>对于const对象，使用const成员函数来访问其状态</li>
+                        <li>谨慎使用mutable，只在确实需要的情况下使用</li>
+                        <li>考虑提供const和非const版本的重载函数</li>
+                    </ul>
+                    
+                    <h3>常见错误</h3>
+                    <ul>
+                        <li>在const成员函数中修改非mutable成员</li>
+                        <li>const对象调用非const成员函数</li>
+                        <li>过度使用mutable关键字，破坏了const的正确性</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            蓝海资料掘金营 © 2023 - C++从入门到精通课程
+        </footer>
+    </div>
+</body>
+</html>

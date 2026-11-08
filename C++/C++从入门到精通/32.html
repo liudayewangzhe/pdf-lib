@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Lambda表达式详解</title>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #FFC107;
+            --accent: #2196F3;
+            --light: #E8F5E9;
+            --dark: #2E7D32;
+            --text: #333333;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--light) 0%, #FFFFFF 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23ffffff'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-size: cover;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        section {
+            margin-bottom: 50px;
+            padding: 25px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 5px 15px var(--shadow);
+            border-left: 5px solid var(--accent);
+        }
+        
+        h2 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2:before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        h3 {
+            color: var(--primary);
+            margin: 20px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: inset 0 1px 3px var(--shadow);
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        tr:hover {
+            background: #f0f0f0;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .tip-box {
+            background: #E3F2FD;
+            border-left: 4px solid var(--accent);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .example-box {
+            background: #F1F8E9;
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .keyword {
+            color: #D32F2F;
+            font-weight: bold;
+        }
+        
+        .comment {
+            color: #757575;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++ Lambda表达式</h1>
+            <p class="subtitle">Lambda语法、捕获列表、Lambda应用详解</p>
+            <div class="decoration"></div>
+        </header>
+        
+        <div class="content">
+            <section id="introduction">
+                <h2>Lambda表达式简介</h2>
+                <p>Lambda表达式是C++11引入的一项重要特性，它允许我们在需要函数对象的地方内联定义匿名函数。Lambda表达式使得代码更加简洁、易读，特别是在使用STL算法时。</p>
+                
+                <div class="svg-container">
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="50" width="500" height="100" rx="10" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+                        <text x="300" y="80" text-anchor="middle" font-family="Arial" font-size="16" fill="#2E7D32">Lambda表达式</text>
+                        <text x="300" y="110" text-anchor="middle" font-family="Arial" font-size="14" fill="#2E7D32">简洁、灵活、功能强大的匿名函数</text>
+                        <circle cx="100" y="100" r="8" fill="#FFC107"/>
+                        <circle cx="300" y="100" r="8" fill="#2196F3"/>
+                        <circle cx="500" y="100" r="8" fill="#4CAF50"/>
+                    </svg>
+                </div>
+                
+                <div class="tip-box">
+                    <p><strong>提示：</strong> Lambda表达式本质上是一个匿名函数对象，编译器会将其转换为一个函数对象类。</p>
+                </div>
+            </section>
+            
+            <section id="syntax">
+                <h2>Lambda表达式语法</h2>
+                <p>Lambda表达式的基本语法如下：</p>
+                
+                <div class="code-block">
+                    <pre><code>[<span class="keyword">capture</span>](<span class="keyword">parameters</span>) <span class="keyword">mutable</span> -> <span class="keyword">return-type</span> { 
+    <span class="comment">// 函数体</span>
+}</code></pre>
+                </div>
+                
+                <h3>语法组成部分</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>组成部分</th>
+                            <th>描述</th>
+                            <th>是否必需</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>捕获列表 [capture]</td>
+                            <td>定义哪些外部变量可以在lambda体内访问</td>
+                            <td>是</td>
+                        </tr>
+                        <tr>
+                            <td>参数列表 (parameters)</td>
+                            <td>与普通函数的参数列表类似</td>
+                            <td>否（空时可省略）</td>
+                        </tr>
+                        <tr>
+                            <td>mutable 修饰符</td>
+                            <td>允许修改按值捕获的变量</td>
+                            <td>否</td>
+                        </tr>
+                        <tr>
+                            <td>返回类型 -> return-type</td>
+                            <td>指定lambda的返回类型</td>
+                            <td>否（可自动推导）</td>
+                        </tr>
+                        <tr>
+                            <td>函数体 {}</td>
+                            <td>包含lambda执行的代码</td>
+                            <td>是</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="example-box">
+                    <p><strong>示例：</strong> 简单的Lambda表达式</p>
+                    <div class="code-block">
+                        <pre><code><span class="comment">// 定义一个简单的lambda，接受两个整数并返回它们的和</span>
+<span class="keyword">auto</span> sum = [](<span class="keyword">int</span> a, <span class="keyword">int</span> b) -> <span class="keyword">int</span> {
+    <span class="keyword">return</span> a + b;
+};
+
+<span class="comment">// 使用lambda</span>
+<span class="keyword">int</span> result = sum(5, 3); <span class="comment">// result = 8</span></code></pre>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="capture-list">
+                <h2>捕获列表详解</h2>
+                <p>捕获列表定义了lambda表达式可以访问的外部变量。捕获方式分为值捕获和引用捕获。</p>
+                
+                <h3>捕获方式</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>捕获方式</th>
+                            <th>语法</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>不捕获任何变量</td>
+                            <td>[]</td>
+                            <td>lambda不能访问任何外部变量</td>
+                        </tr>
+                        <tr>
+                            <td>值捕获</td>
+                            <td>[var]</td>
+                            <td>按值捕获特定变量</td>
+                        </tr>
+                        <tr>
+                            <td>引用捕获</td>
+                            <td>[&var]</td>
+                            <td>按引用捕获特定变量</td>
+                        </tr>
+                        <tr>
+                            <td>隐式值捕获</td>
+                            <td>[=]</td>
+                            <td>按值捕获所有外部变量</td>
+                        </tr>
+                        <tr>
+                            <td>隐式引用捕获</td>
+                            <td>[&]</td>
+                            <td>按引用捕获所有外部变量</td>
+                        </tr>
+                        <tr>
+                            <td>混合捕获</td>
+                            <td>[=, &var] 或 [&, var]</td>
+                            <td>混合使用值和引用捕获</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="example-box">
+                    <p><strong>示例：</strong> 捕获列表的使用</p>
+                    <div class="code-block">
+                        <pre><code><span class="keyword">int</span> x = 10;
+<span class="keyword">int</span> y = 20;
+<span class="keyword">int</span> z = 30;
+
+<span class="comment">// 值捕获x，引用捕获y</span>
+<span class="keyword">auto</span> lambda1 = [x, &y]() {
+    <span class="comment">// x是副本，可以读取但不能修改（除非使用mutable）</span>
+    <span class="comment">// y是引用，可以读取和修改原变量</span>
+    y = x + y;
+    <span class="keyword">return</span> y;
+};
+
+<span class="comment">// 隐式值捕获所有变量，但z使用引用捕获</span>
+<span class="keyword">auto</span> lambda2 = [=, &z]() {
+    z = x + y; <span class="comment">// 修改的是外部变量z</span>
+    <span class="keyword">return</span> x + y; <span class="comment">// 使用的是x和y的副本</span>
+};
+
+<span class="comment">// 使用mutable允许修改值捕获的变量</span>
+<span class="keyword">auto</span> lambda3 = [x]() <span class="keyword">mutable</span> {
+    x = x * 2; <span class="comment">// 修改的是副本，不影响外部变量</span>
+    <span class="keyword">return</span> x;
+};</code></pre>
+                    </div>
+                </div>
+                
+                <div class="svg-container">
+                    <svg width="600" height="300" viewBox="0 0 600 300">
+                        <rect x="50" y="50" width="200" height="80" rx="10" fill="#E3F2FD" stroke="#2196F3" stroke-width="2"/>
+                        <text x="150" y="85" text-anchor="middle" font-family="Arial" font-size="14" fill="#1565C0">外部变量</text>
+                        
+                        <rect x="350" y="50" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+                        <text x="450" y="85" text-anchor="middle" font-family="Arial" font-size="14" fill="#2E7D32">Lambda表达式</text>
+                        
+                        <line x1="250" y1="90" x2="350" y2="90" stroke="#FF9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <text x="300" y="85" text-anchor="middle" font-family="Arial" font-size="12" fill="#FF9800">值捕获</text>
+                        
+                        <line x1="250" y1="110" x2="350" y2="110" stroke="#F44336" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <text x="300" y="115" text-anchor="middle" font-family="Arial" font-size="12" fill="#F44336">引用捕获</text>
+                        
+                        <rect x="50" y="180" width="500" height="80" rx="10" fill="#FFF3E0" stroke="#FF9800" stroke-width="2"/>
+                        <text x="300" y="210" text-anchor="middle" font-family="Arial" font-size="14" fill="#E65100">捕获列表决定变量如何传递到Lambda</text>
+                        <text x="300" y="235" text-anchor="middle" font-family="Arial" font-size="12" fill="#E65100">值捕获创建副本，引用捕获使用原变量</text>
+                        
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#FF9800"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+            </section>
+            
+            <section id="applications">
+                <h2>Lambda表达式应用</h2>
+                <p>Lambda表达式在C++编程中有广泛的应用，特别是在STL算法、多线程编程和事件处理中。</p>
+                
+                <h3>1. 与STL算法结合使用</h3>
+                <div class="code-block">
+                    <pre><code><span class="keyword">#include</span> <span class="keyword">&lt;algorithm&gt;</span>
+<span class="keyword">#include</span> <span class="keyword">&lt;vector&gt;</span>
+<span class="keyword">#include</span> <span class="keyword">&lt;iostream&gt;</span>
+
+<span class="keyword">int</span> main() {
+    std::vector&lt;<span class="keyword">int</span>&gt; numbers = {1, 5, 3, 8, 2, 7, 6, 4};
+    
+    <span class="comment">// 使用lambda对vector进行排序</span>
+    std::sort(numbers.begin(), numbers.end(), [](<span class="keyword">int</span> a, <span class="keyword">int</span> b) {
+        <span class="keyword">return</span> a > b; <span class="comment">// 降序排序</span>
+    });
+    
+    <span class="comment">// 使用lambda查找满足条件的元素</span>
+    <span class="keyword">auto</span> it = std::find_if(numbers.begin(), numbers.end(), [](<span class="keyword">int</span> n) {
+        <span class="keyword">return</span> n % 2 == 0 && n > 4;
+    });
+    
+    <span class="keyword">if</span> (it != numbers.end()) {
+        std::cout << <span class="keyword">"找到第一个大于4的偶数: "</span> << *it << std::endl;
+    }
+    
+    <span class="comment">// 使用lambda转换元素</span>
+    std::vector&lt;<span class="keyword">int</span>&gt; squares;
+    std::transform(numbers.begin(), numbers.end(), std::back_inserter(squares),
+                  [](<span class="keyword">int</span> n) { <span class="keyword">return</span> n * n; });
+    
+    <span class="keyword">return</span> 0;
+}</code></pre>
+                </div>
+                
+                <h3>2. 在多线程编程中的应用</h3>
+                <div class="code-block">
+                    <pre><code><span class="keyword">#include</span> <span class="keyword">&lt;thread&gt;</span>
+<span class="keyword">#include</span> <span class="keyword">&lt;iostream&gt;</span>
+<span class="keyword">#include</span> <span class="keyword">&lt;vector&gt;</span>
+
+<span class="keyword">int</span> main() {
+    std::vector&lt;std::thread&gt; threads;
+    <span class="keyword">int</span> shared_data = 0;
+    
+    <span class="comment">// 创建多个线程，使用lambda作为线程函数</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < 5; ++i) {
+        threads.emplace_back([i, &shared_data]() {
+            <span class="comment">// 每个线程增加shared_data</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = 0; j < 1000; ++j) {
+                shared_data++;
+            }
+            std::cout << <span class="keyword">"线程 "</span> << i << <span class="keyword">" 完成"</span> << std::endl;
+        });
+    }
+    
+    <span class="comment">// 等待所有线程完成</span>
+    <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; t : threads) {
+        t.join();
+    }
+    
+    std::cout << <span class="keyword">"最终结果: "</span> << shared_data << std::endl;
+    <span class="keyword">return</span> 0;
+}</code></pre>
+                </div>
+                
+                <h3>3. 在GUI和事件处理中的应用</h3>
+                <div class="code-block">
+                    <pre><code><span class="comment">// 假设有一个按钮类，可以设置点击事件处理函数</span>
+<span class="keyword">class</span> Button {
+<span class="keyword">public</span>:
+    <span class="keyword">using</span> ClickHandler = std::function&lt;<span class="keyword">void</span>()&gt;;
+    
+    <span class="keyword">void</span> setOnClick(ClickHandler handler) {
+        clickHandler = handler;
+    }
+    
+    <span class="keyword">void</span> simulateClick() {
+        <span class="keyword">if</span> (clickHandler) {
+            clickHandler();
+        }
+    }
+    
+<span class="keyword">private</span>:
+    ClickHandler clickHandler;
+};
+
+<span class="keyword">int</span> main() {
+    Button btn;
+    <span class="keyword">int</span> clickCount = 0;
+    
+    <span class="comment">// 使用lambda设置按钮点击事件处理</span>
+    btn.setOnClick([&clickCount]() {
+        clickCount++;
+        std::cout << <span class="keyword">"按钮被点击了 "</span> << clickCount << <span class="keyword">" 次"</span> << std::endl;
+    });
+    
+    <span class="comment">// 模拟按钮点击</span>
+    btn.simulateClick();
+    btn.simulateClick();
+    btn.simulateClick();
+    
+    <span class="keyword">return</span> 0;
+}</code></pre>
+                </div>
+                
+                <div class="tip-box">
+                    <p><strong>最佳实践：</strong> 当lambda表达式较复杂或需要重复使用时，考虑使用命名函数或函数对象代替。对于简单的、一次性的操作，lambda表达式是最佳选择。</p>
+                </div>
+            </section>
+            
+            <section id="summary">
+                <h2>总结</h2>
+                <p>Lambda表达式是C++11引入的强大特性，它使得代码更加简洁、表达力更强。通过本课程的学习，你应该掌握：</p>
+                
+                <ul>
+                    <li>Lambda表达式的基本语法和组成部分</li>
+                    <li>捕获列表的各种用法和区别</li>
+                    <li>Lambda表达式在STL算法、多线程和事件处理中的实际应用</li>
+                    <li>值捕获和引用捕获的适用场景</li>
+                </ul>
+                
+                <div class="svg-container">
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="50" width="500" height="100" rx="10" fill="#FFF3E0" stroke="#FF9800" stroke-width="2"/>
+                        <text x="300" y="85" text-anchor="middle" font-family="Arial" font-size="16" fill="#E65100">Lambda表达式让C++代码更简洁、更强大！</text>
+                        <text x="300" y="115" text-anchor="middle" font-family="Arial" font-size="14" fill="#E65100">掌握Lambda，提升你的C++编程水平</text>
+                        
+                        <circle cx="150" y="100" r="15" fill="#4CAF50" opacity="0.7">
+                            <animate attributeName="r" values="15;20;15" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="300" y="100" r="15" fill="#2196F3" opacity="0.7">
+                            <animate attributeName="r" values="15;20;15" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                        </circle>
+                        <circle cx="450" y="100" r="15" fill="#FFC107" opacity="0.7">
+                            <animate attributeName="r" values="15;20;15" dur="2s" repeatCount="indefinite" begin="1s"/>
+                        </circle>
+                    </svg>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>

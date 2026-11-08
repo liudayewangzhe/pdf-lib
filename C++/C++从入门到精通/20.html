@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ STL算法详解 - 蓝海资料掘金营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', '微软雅黑', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e0f7fa 0%, #fce4ec 50%, #f3e5f5 100%);
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 5px solid #4db6ac;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #4db6ac, #80deea);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #00796b;
+            border-bottom: 3px dashed #4db6ac;
+            padding-bottom: 10px;
+            margin: 30px 0 20px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #00897b;
+            margin: 20px 0 15px;
+            font-size: 1.4em;
+        }
+        
+        .chapter-title {
+            font-size: 1.2em;
+            color: #00695c;
+            background-color: #e0f2f1;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+            border-left: 5px solid #4db6ac;
+        }
+        
+        .content-section {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid #b2dfdb;
+        }
+        
+        .algorithm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .algorithm-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #4db6ac;
+        }
+        
+        .algorithm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .algorithm-card h4 {
+            color: #00796b;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0f2f1;
+        }
+        
+        th {
+            background-color: #4db6ac;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f3f9f9;
+        }
+        
+        tr:hover {
+            background-color: #e0f2f1;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #4db6ac;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+        
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+        
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .comparison-table {
+            background-color: #e8f5e9;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .comparison-table h4 {
+            color: #00796b;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #4db6ac, #80deea);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tip-box {
+            background-color: #e1f5fe;
+            border-left: 5px solid #0288d1;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .note-box {
+            background-color: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .complexity-table {
+            background-color: #f3e5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .complexity-table h4 {
+            color: #7b1fa2;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++ STL算法详解</h1>
+            <p>排序算法、查找算法、数值算法</p>
+        </header>
+        
+        <section>
+            <h2>STL算法简介</h2>
+            <div class="content-section">
+                <p>STL（Standard Template Library）是C++标准库的重要组成部分，提供了丰富的通用算法。这些算法主要分为三类：排序算法、查找算法和数值算法。它们都定义在 <code>&lt;algorithm&gt;</code> 头文件中。</p>
+                
+                <div class="svg-container">
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="50" width="150" height="100" rx="10" fill="#4db6ac" stroke="#00796b" stroke-width="2"/>
+                        <text x="125" y="110" text-anchor="middle" fill="white" font-size="16" font-weight="bold">排序算法</text>
+                        
+                        <rect x="225" y="50" width="150" height="100" rx="10" fill="#80deea" stroke="#00796b" stroke-width="2"/>
+                        <text x="300" y="110" text-anchor="middle" fill="white" font-size="16" font-weight="bold">查找算法</text>
+                        
+                        <rect x="400" y="50" width="150" height="100" rx="10" fill="#a5d6a7" stroke="#00796b" stroke-width="2"/>
+                        <text x="475" y="110" text-anchor="middle" fill="white" font-size="16" font-weight="bold">数值算法</text>
+                        
+                        <text x="300" y="30" text-anchor="middle" fill="#00796b" font-size="20" font-weight="bold">STL算法分类</text>
+                    </svg>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>提示：</strong> 大多数STL算法都使用迭代器作为参数，这使得它们可以应用于各种容器。
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>排序算法</h2>
+            <div class="content-section">
+                <p>排序算法用于对容器中的元素进行排序。STL提供了多种排序算法，每种算法都有其特定的应用场景。</p>
+                
+                <div class="algorithm-grid">
+                    <div class="algorithm-card">
+                        <h4>sort()</h4>
+                        <p>对指定范围内的元素进行排序，默认是升序排序。</p>
+                        <pre><code>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {5, 2, 8, 1, 9};
+    std::sort(nums.begin(), nums.end());
+    
+    for(int num : nums) {
+        std::cout << num << " ";
+    }
+    // 输出: 1 2 5 8 9
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="algorithm-card">
+                        <h4>stable_sort()</h4>
+                        <p>稳定排序，相等元素的相对顺序在排序后保持不变。</p>
+                        <pre><code>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+
+struct Student {
+    std::string name;
+    int score;
+};
+
+bool compareByScore(const Student& a, const Student& b) {
+    return a.score < b.score;
+}
+
+int main() {
+    std::vector&lt;Student&gt; students = {{"Alice", 85}, {"Bob", 85}, {"Charlie", 90}};
+    std::stable_sort(students.begin(), students.end(), compareByScore);
+    // Alice和Bob的相对顺序保持不变
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="algorithm-card">
+                        <h4>partial_sort()</h4>
+                        <p>部分排序，只对指定范围内的前n个元素进行排序。</p>
+                        <pre><code>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {9, 3, 6, 2, 7, 1, 8, 4, 5};
+    // 只排序前5个最小的元素
+    std::partial_sort(nums.begin(), nums.begin() + 5, nums.end());
+    
+    for(int num : nums) {
+        std::cout << num << " ";
+    }
+    // 输出: 1 2 3 4 5 9 8 7 6
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="comparison-table">
+                    <h4>排序算法比较</h4>
+                    <table>
+                        <tr>
+                            <th>算法</th>
+                            <th>时间复杂度</th>
+                            <th>稳定性</th>
+                            <th>适用场景</th>
+                        </tr>
+                        <tr>
+                            <td>sort()</td>
+                            <td>O(n log n)</td>
+                            <td>不稳定</td>
+                            <td>通用排序</td>
+                        </tr>
+                        <tr>
+                            <td>stable_sort()</td>
+                            <td>O(n log n) 或 O(n (log n)^2)</td>
+                            <td>稳定</td>
+                            <td>需要保持相等元素顺序</td>
+                        </tr>
+                        <tr>
+                            <td>partial_sort()</td>
+                            <td>O(n log k)</td>
+                            <td>不稳定</td>
+                            <td>只需要前k个有序元素</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>查找算法</h2>
+            <div class="content-section">
+                <p>查找算法用于在容器中搜索特定的元素或满足特定条件的元素。</p>
+                
+                <div class="algorithm-grid">
+                    <div class="algorithm-card">
+                        <h4>find()</h4>
+                        <p>在指定范围内查找特定值。</p>
+                        <pre><code>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {1, 2, 3, 4, 5};
+    auto it = std::find(nums.begin(), nums.end(), 3);
+    
+    if(it != nums.end()) {
+        std::cout << "找到元素: " << *it << std::endl;
+    } else {
+        std::cout << "未找到元素" << std::endl;
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="algorithm-card">
+                        <h4>binary_search()</h4>
+                        <p>在已排序的范围内进行二分查找。</p>
+                        <pre><code>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    bool found = std::binary_search(nums.begin(), nums.end(), 5);
+    
+    if(found) {
+        std::cout << "找到元素5" << std::endl;
+    } else {
+        std::cout << "未找到元素5" << std::endl;
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="algorithm-card">
+                        <h4>lower_bound() / upper_bound()</h4>
+                        <p>在已排序的范围内查找边界位置。</p>
+                        <pre><code>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {1, 2, 2, 2, 3, 4, 5};
+    
+    // 查找第一个不小于2的位置
+    auto lower = std::lower_bound(nums.begin(), nums.end(), 2);
+    // 查找第一个大于2的位置
+    auto upper = std::upper_bound(nums.begin(), nums.end(), 2);
+    
+    std::cout << "2的个数: " << std::distance(lower, upper) << std::endl;
+    // 输出: 2的个数: 3
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <strong>注意：</strong> 使用binary_search()、lower_bound()和upper_bound()前，必须确保容器已经排序，否则结果不可预测。
+                </div>
+                
+                <h3>其他常用查找算法</h3>
+                <ul>
+                    <li><code>find_if()</code> - 查找满足特定条件的第一个元素</li>
+                    <li><code>count()</code> - 统计特定值出现的次数</li>
+                    <li><code>count_if()</code> - 统计满足特定条件的元素个数</li>
+                    <li><code>search()</code> - 在序列中查找子序列</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section>
+            <h2>数值算法</h2>
+            <div class="content-section">
+                <p>数值算法主要用于对序列进行数值计算，需要包含 <code>&lt;numeric&gt;</code> 头文件。</p>
+                
+                <div class="algorithm-grid">
+                    <div class="algorithm-card">
+                        <h4>accumulate()</h4>
+                        <p>计算序列中所有元素的累加和。</p>
+                        <pre><code>#include &lt;numeric&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {1, 2, 3, 4, 5};
+    int sum = std::accumulate(nums.begin(), nums.end(), 0);
+    
+    std::cout << "总和: " << sum << std::endl;
+    // 输出: 总和: 15
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="algorithm-card">
+                        <h4>inner_product()</h4>
+                        <p>计算两个序列的内积（点积）。</p>
+                        <pre><code>#include &lt;numeric&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; v1 = {1, 2, 3};
+    std::vector&lt;int&gt; v2 = {4, 5, 6};
+    
+    int result = std::inner_product(v1.begin(), v1.end(), v2.begin(), 0);
+    std::cout << "内积: " << result << std::endl;
+    // 输出: 内积: 32 (1*4 + 2*5 + 3*6)
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div class="algorithm-card">
+                        <h4>partial_sum()</h4>
+                        <p>计算序列的部分和。</p>
+                        <pre><code>#include &lt;numeric&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+
+int main() {
+    std::vector&lt;int&gt; nums = {1, 2, 3, 4, 5};
+    std::vector&lt;int&gt; result(5);
+    
+    std::partial_sum(nums.begin(), nums.end(), result.begin());
+    
+    for(int num : result) {
+        std::cout << num << " ";
+    }
+    // 输出: 1 3 6 10 15
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+                
+                <h3>其他数值算法</h3>
+                <ul>
+                    <li><code>adjacent_difference()</code> - 计算相邻元素的差值</li>
+                    <li><code>iota()</code> - 用连续递增的值填充序列</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section>
+            <h2>算法复杂度总结</h2>
+            <div class="content-section">
+                <div class="complexity-table">
+                    <h4>常用STL算法时间复杂度</h4>
+                    <table>
+                        <tr>
+                            <th>算法类别</th>
+                            <th>算法名称</th>
+                            <th>平均时间复杂度</th>
+                            <th>最坏时间复杂度</th>
+                        </tr>
+                        <tr>
+                            <td rowspan="3">排序算法</td>
+                            <td>sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                        </tr>
+                        <tr>
+                            <td>stable_sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n (log n)^2)</td>
+                        </tr>
+                        <tr>
+                            <td>partial_sort</td>
+                            <td>O(n log k)</td>
+                            <td>O(n log k)</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="4">查找算法</td>
+                            <td>find</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>binary_search</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                        </tr>
+                        <tr>
+                            <td>lower_bound</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                        </tr>
+                        <tr>
+                            <td>count</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3">数值算法</td>
+                            <td>accumulate</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>inner_product</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>partial_sum</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>综合示例</h2>
+            <div class="content-section">
+                <p>下面是一个综合使用多种STL算法的示例：</p>
+                
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;numeric&gt;
+
+int main() {
+    // 创建并初始化向量
+    std::vector&lt;int&gt; numbers = {7, 3, 5, 1, 9, 2, 8, 4, 6, 3, 5};
+    
+    std::cout << "原始数据: ";
+    for(int num : numbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    // 排序
+    std::sort(numbers.begin(), numbers.end());
+    std::cout << "排序后: ";
+    for(int num : numbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    // 查找
+    auto it = std::find(numbers.begin(), numbers.end(), 5);
+    if(it != numbers.end()) {
+        std::cout << "找到数字5，位置: " << std::distance(numbers.begin(), it) << std::endl;
+    }
+    
+    // 统计
+    int count5 = std::count(numbers.begin(), numbers.end(), 5);
+    std::cout << "数字5出现的次数: " << count5 << std::endl;
+    
+    // 数值计算
+    int sum = std::accumulate(numbers.begin(), numbers.end(), 0);
+    std::cout << "所有数字的和: " << sum << std::endl;
+    
+    // 去重
+    auto last = std::unique(numbers.begin(), numbers.end());
+    numbers.erase(last, numbers.end());
+    std::cout << "去重后: ";
+    for(int num : numbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    return 0;
+}</code></pre>
+                
+                <div class="tip-box">
+                    <strong>编程技巧：</strong> 合理组合使用STL算法可以大大简化代码，提高开发效率。记住"不要重复造轮子"的原则，优先使用STL提供的算法。
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            蓝海资料掘金营
+        </footer>
+    </div>
+</body>
+</html>
